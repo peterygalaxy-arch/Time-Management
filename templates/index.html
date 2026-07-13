@@ -2,10 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimeTrack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>TimeTrack</h1>
-    <p>My time management website.</p>
+    <div class="page">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="clock">L</div>
+                <h1>TimeTrack</h1>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="welcome">
+                <h2>Good morning, Alex!</h2>
+                <p>Let's make today productive.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
