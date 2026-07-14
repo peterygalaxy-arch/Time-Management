@@ -44,6 +44,48 @@ body {
     line-height: 30px;
 }
 
+.menu {
+    margin-top: 45px;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    color: #202842;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+.menu-icon {
+    width: 24px;
+    color: #59647d;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.menu-link.active {
+    background-color: #5b55f7;
+    color: white;
+}
+
+.menu-link.active .menu-icon {
+    color: white;
+}
+
+.menu-link:hover {
+    background-color: #f0f1ff;
+}
+
+.menu-link.active:hover {
+    background-color: #5b55f7;
+}
+
 .main-content {
     flex: 1;
     padding: 45px 50px;
