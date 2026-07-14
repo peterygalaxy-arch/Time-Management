@@ -92,6 +92,12 @@ body {
     background-color: white;
 }
 
+.top-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
 .welcome h2 {
     margin: 0 0 12px 0;
     font-size: 30px;
@@ -101,4 +107,42 @@ body {
     margin: 0;
     color: #5f6983;
     font-size: 17px;
+}
+
+.wave {
+    font-size: 28px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #59647d;
+}
+
+.date-icon {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #59647d;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 24px;
+}
+
+.date {
+    font-size: 16px;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    margin-left: 8px;
+    border-radius: 50%;
+    background-color: #5b55f7;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    line-height: 44px;
 }
