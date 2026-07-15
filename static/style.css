@@ -146,3 +146,53 @@ body {
     text-align: center;
     line-height: 44px;
 }
+
+.summary-section {
+    margin-top: 35px;
+}
+
+.summary-card {
+    display: flex;
+    width: 280px;
+    min-height: 150px;
+    padding: 28px 24px;
+    border: 1px solid #dedcfb;
+    border-radius: 12px;
+}
+
+.task-summary {
+    background-color: #f8f7ff;
+}
+
+.summary-icon {
+    width: 52px;
+    height: 52px;
+    margin-right: 24px;
+    border-radius: 10px;
+    background-color: #625bf6;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 52px;
+}
+
+.summary-text p {
+    margin: 0;
+}
+
+.summary-text .summary-title {
+    margin-bottom: 12px;
+    font-size: 17px;
+}
+
+.summary-text .summary-number {
+    margin-bottom: 16px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.summary-note {
+    color: #625bf6;
+    font-size: 15px;
+}
