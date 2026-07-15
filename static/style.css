@@ -148,6 +148,8 @@ body {
 }
 
 .summary-section {
+    display: flex;
+    gap: 22px;
     margin-top: 35px;
 }
 
@@ -162,6 +164,11 @@ body {
 
 .task-summary {
     background-color: #f8f7ff;
+}
+
+.focus-summary {
+    border-color: #d8eee0;
+    background-color: #f3fbf6;
 }
 
 .summary-icon {
@@ -195,4 +202,12 @@ body {
 .summary-note {
     color: #625bf6;
     font-size: 15px;
+}
+
+.focus-icon {
+    background-color: #39b968;
+}
+
+.focus-note {
+    color: #25994e;
 }
