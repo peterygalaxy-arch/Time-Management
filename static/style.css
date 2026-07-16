@@ -171,6 +171,11 @@ body {
     background-color: #f3fbf6;
 }
 
+.goal-summary {
+    border-color: #f1e2c6;
+    background-color: #fffaf1;
+}
+
 .summary-icon {
     width: 52px;
     height: 52px;
@@ -210,4 +215,23 @@ body {
 
 .focus-note {
     color: #25994e;
+}
+
+.goal-icon {
+    background-color: #ffad1f;
+}
+
+.goal-bar {
+    width: 145px;
+    height: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: #f9e8c5;
+}
+
+.goal-progress {
+    width: 75%;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #ffad1f;
 }
