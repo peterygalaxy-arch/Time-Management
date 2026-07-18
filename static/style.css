@@ -278,3 +278,56 @@ body {
     font-size: 15px;
     text-decoration: none;
 }
+
+.task-list {
+    margin-top: 28px;
+}
+
+.task-row {
+    padding: 20px 0;
+    border-bottom: 1px solid #e8eaf1;
+}
+
+.task-name {
+    display: flex;
+    align-items: center;
+}
+
+.task-name input {
+    width: 20px;
+    height: 20px;
+    margin: 0 12px 0 0;
+}
+
+.task-name label {
+    font-size: 16px;
+}
+
+.task-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    margin-left: 32px;
+}
+
+.priority {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.high {
+    background-color: #ffe8ee;
+    color: #f04c72;
+}
+
+.medium {
+    background-color: #fff1d8;
+    color: #e99b18;
+}
+
+.task-time {
+    color: #59647d;
+    font-size: 14px;
+}
