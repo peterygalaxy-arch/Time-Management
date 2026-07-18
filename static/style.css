@@ -327,6 +327,16 @@ body {
     color: #e99b18;
 }
 
+.low {
+    background-color: #e7f8ed;
+    color: #38a65f;
+}
+
+.completed-task label {
+    color: #6d7485;
+    text-decoration: line-through;
+}
+
 .task-time {
     color: #59647d;
     font-size: 14px;
