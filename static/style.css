@@ -369,3 +369,62 @@ body {
     margin: 0;
     font-size: 21px;
 }
+
+.schedule-list {
+    margin-top: 30px;
+}
+
+.schedule-row {
+    display: flex;
+    align-items: center;
+}
+
+.schedule-time {
+    width: 72px;
+    margin: 0;
+    color: #59647d;
+    font-size: 14px;
+}
+
+.schedule-line {
+    width: 20px;
+    height: 68px;
+    border-left: 2px solid #dcd9ff;
+}
+
+.schedule-dot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin-top: 6px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background-color: #625bf6;
+}
+
+.schedule-card {
+    flex: 1;
+    min-height: 68px;
+    padding: 12px;
+    border-left: 2px solid #625bf6;
+    border-radius: 6px;
+}
+
+.purple-schedule {
+    background-color: #f5f3ff;
+}
+
+.schedule-card p {
+    margin: 0;
+}
+
+.schedule-name {
+    color: #332c91;
+    font-size: 14px;
+}
+
+.schedule-hours {
+    margin-top: 8px !important;
+    color: #59647d;
+    font-size: 13px;
+}
