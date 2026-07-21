@@ -428,3 +428,20 @@ body {
     color: #59647d;
     font-size: 13px;
 }
+
+.green-line {
+    border-left-color: #bfe9cc;
+}
+
+.green-dot {
+    background-color: #39b968;
+}
+
+.green-schedule {
+    border-left-color: #39b968;
+    background-color: #effaf3;
+}
+
+.green-name {
+    color: #258647;
+}
