@@ -462,3 +462,20 @@ body {
 .orange-name {
     color: #bd7410;
 }
+
+.pink-line {
+    border-left-color: #f6c4d4;
+}
+
+.pink-dot {
+    background-color: #f5487b;
+}
+
+.pink-schedule {
+    border-left-color: #f5487b;
+    background-color: #fff0f5;
+}
+
+.pink-name {
+    color: #d93268;
+}
