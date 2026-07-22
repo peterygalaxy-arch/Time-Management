@@ -445,3 +445,20 @@ body {
 .green-name {
     color: #258647;
 }
+
+.orange-line {
+    border-left-color: #f5d99f;
+}
+
+.orange-dot {
+    background-color: #ffad1f;
+}
+
+.orange-schedule {
+    border-left-color: #ffad1f;
+    background-color: #fff8e9;
+}
+
+.orange-name {
+    color: #bd7410;
+}
