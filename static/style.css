@@ -479,3 +479,20 @@ body {
 .pink-name {
     color: #d93268;
 }
+
+.blue-line {
+    border-left-color: #bad3fa;
+}
+
+.blue-dot {
+    background-color: #4384ed;
+}
+
+.blue-schedule {
+    border-left-color: #4384ed;
+    background-color: #eef5ff;
+}
+
+.blue-name {
+    color: #276acb;
+}
