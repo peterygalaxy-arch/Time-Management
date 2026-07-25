@@ -496,3 +496,12 @@ body {
 .blue-name {
     color: #276acb;
 }
+
+.calendar-link {
+    display: block;
+    margin-top: 24px;
+    color: #5b55f7;
+    font-size: 15px;
+    text-align: center;
+    text-decoration: none;
+}
