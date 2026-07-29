@@ -519,3 +519,11 @@ body {
     margin: 0;
     font-size: 21px;
 }
+
+.timer-circle {
+    width: 190px;
+    height: 190px;
+    margin: 55px auto 0 auto;
+    border: 8px solid #dfe5ff;
+    border-radius: 50%;
+}
