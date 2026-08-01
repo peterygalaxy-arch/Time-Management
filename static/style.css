@@ -521,9 +521,18 @@ body {
 }
 
 .timer-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 190px;
     height: 190px;
     margin: 55px auto 0 auto;
     border: 8px solid #dfe5ff;
     border-radius: 50%;
+}
+
+.timer-number {
+    margin: 0;
+    font-size: 38px;
+    font-weight: bold;
 }
