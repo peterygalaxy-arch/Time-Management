@@ -522,6 +522,7 @@ body {
 
 .timer-circle {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 190px;
@@ -535,4 +536,10 @@ body {
     margin: 0;
     font-size: 38px;
     font-weight: bold;
+}
+
+.timer-minutes {
+    margin: 10px 0 0 0;
+    color: #59647d;
+    font-size: 14px;
 }
