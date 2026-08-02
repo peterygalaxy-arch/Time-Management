@@ -560,3 +560,14 @@ body {
     color: white;
     font-size: 16px;
 }
+
+.reset-button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid #dfe2eb;
+    border-radius: 6px;
+    background-color: white;
+    color: #59647d;
+    font-size: 16px;
+}
