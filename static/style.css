@@ -515,9 +515,23 @@ body {
     background-color: white;
 }
 
-.timer-panel h3 {
+.timer-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer-heading h3 {
     margin: 0;
     font-size: 21px;
+}
+
+.timer-settings {
+    padding: 0;
+    border: none;
+    background-color: white;
+    color: #59647d;
+    font-size: 24px;
 }
 
 .timer-circle {
