@@ -543,6 +543,9 @@ body {
     height: 190px;
     margin: 55px auto 0 auto;
     border: 8px solid #dfe5ff;
+    border-right-color: #5b55f7;
+    border-bottom-color: #4378ed;
+    border-left-color: #4378ed;
     border-radius: 50%;
 }
 
