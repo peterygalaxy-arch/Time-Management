@@ -1,2 +1,5 @@
 # macOS local metadata.
 .DS_Store
+
+# Keep the design reference on this computer only.
+Example.png

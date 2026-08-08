@@ -272,20 +272,22 @@
                     </div>
 
                     <div class="timer-circle">
-                        <p class="timer-number">25:00</p>
+                        <p class="timer-number" id="timer-number">25:00</p>
                         <p class="timer-minutes">minutes</p>
-                        <p class="timer-message">Start focusing!</p>
+                        <p class="timer-message" id="timer-message">Start focusing!</p>
                     </div>
 
-                    <button class="start-button">
-                        <span class="play-icon">&#9654;</span> Start
+                    <button class="start-button" id="start-button" type="button">
+                        <span class="play-icon" id="play-icon">&#9654;</span>
+                        <span id="start-text">Start</span>
                     </button>
-                    <button class="reset-button">
+                    <button class="reset-button" id="reset-button" type="button">
                         <span class="reset-icon">&#8635;</span> Reset
                     </button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
