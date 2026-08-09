@@ -55,3 +55,89 @@ resetButton.addEventListener("click", function () {
 });
 
 showTime();
+
+const taskList = document.getElementById("task-list");
+const addTaskButton = document.getElementById("add-task-button");
+const taskTotal = document.getElementById("task-total");
+const taskCompleted = document.getElementById("task-completed");
+
+function updateTaskSummary() {
+    const checkboxes = taskList.querySelectorAll("input[type='checkbox']");
+    let completedCount = 0;
+
+    checkboxes.forEach(function (checkbox) {
+        const taskRow = checkbox.closest(".task-row");
+
+        if (checkbox.checked) {
+            completedCount = completedCount + 1;
+            taskRow.classList.add("completed-task");
+        } else {
+            taskRow.classList.remove("completed-task");
+        }
+    });
+
+    taskTotal.textContent = checkboxes.length;
+    taskCompleted.textContent = completedCount + " completed";
+}
+
+function listenToCheckbox(checkbox) {
+    checkbox.addEventListener("change", function () {
+        updateTaskSummary();
+    });
+}
+
+const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
+
+firstCheckboxes.forEach(function (checkbox) {
+    listenToCheckbox(checkbox);
+});
+
+addTaskButton.addEventListener("click", function () {
+    const taskName = prompt("Enter a task name:");
+
+    if (taskName === null || taskName.trim() === "") {
+        return;
+    }
+
+    let taskTime = prompt("Enter a time:", "7:00 PM");
+
+    if (taskTime === null || taskTime.trim() === "") {
+        taskTime = "No time";
+    }
+
+    let taskPriority = prompt("Enter High, Medium, or Low:", "Low");
+
+    if (taskPriority === null) {
+        taskPriority = "Low";
+    }
+
+    taskPriority = taskPriority.trim().toLowerCase();
+
+    if (taskPriority !== "high" && taskPriority !== "medium" && taskPriority !== "low") {
+        taskPriority = "low";
+    }
+
+    const newTaskNumber = taskList.querySelectorAll(".task-row").length + 1;
+    const newTask = document.createElement("div");
+    const priorityText = taskPriority.charAt(0).toUpperCase() + taskPriority.slice(1);
+
+    newTask.className = "task-row";
+    newTask.innerHTML = `
+        <div class="task-name">
+            <input type="checkbox" id="task-${newTaskNumber}">
+            <label for="task-${newTaskNumber}">${taskName.trim()}</label>
+        </div>
+        <div class="task-details">
+            <span class="priority ${taskPriority}">${priorityText}</span>
+            <span class="task-time">${taskTime.trim()}</span>
+        </div>
+    `;
+
+    taskList.appendChild(newTask);
+
+    const newCheckbox = newTask.querySelector("input[type='checkbox']");
+    listenToCheckbox(newCheckbox);
+    updateTaskSummary();
+});
+
+updateTaskSummary();
