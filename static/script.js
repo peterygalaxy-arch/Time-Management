@@ -1,4 +1,5 @@
-let timeLeft = 25 * 60;
+let focusMinutes = 25;
+let timeLeft = focusMinutes * 60;
 let timerRunning = false;
 let timerInterval;
 
@@ -8,6 +9,11 @@ const startButton = document.getElementById("start-button");
 const startText = document.getElementById("start-text");
 const playIcon = document.getElementById("play-icon");
 const resetButton = document.getElementById("reset-button");
+const timerSettings = document.getElementById("timer-settings");
+const timerOptions = document.getElementById("timer-options");
+const focusMinutesInput = document.getElementById("focus-minutes");
+const saveTimeButton = document.getElementById("save-time-button");
+const cancelTimeButton = document.getElementById("cancel-time-button");
 
 function showTime() {
     const minutes = Math.floor(timeLeft / 60);
@@ -49,9 +55,39 @@ startButton.addEventListener("click", function () {
 
 resetButton.addEventListener("click", function () {
     stopTimer();
-    timeLeft = 25 * 60;
+    timeLeft = focusMinutes * 60;
     showTime();
     timerMessage.textContent = "Start focusing!";
+});
+
+timerSettings.addEventListener("click", function () {
+    if (timerOptions.classList.contains("open")) {
+        timerOptions.classList.remove("open");
+    } else {
+        focusMinutesInput.value = focusMinutes;
+        timerOptions.classList.add("open");
+    }
+});
+
+saveTimeButton.addEventListener("click", function () {
+    const newMinutes = Number(focusMinutesInput.value);
+
+    if (newMinutes < 1 || newMinutes > 60) {
+        alert("Please enter a number from 1 to 60.");
+        return;
+    }
+
+    stopTimer();
+    focusMinutes = newMinutes;
+    timeLeft = focusMinutes * 60;
+    showTime();
+    timerMessage.textContent = "Timer set to " + focusMinutes + " minutes";
+    timerOptions.classList.remove("open");
+});
+
+cancelTimeButton.addEventListener("click", function () {
+    focusMinutesInput.value = focusMinutes;
+    timerOptions.classList.remove("open");
 });
 
 showTime();
