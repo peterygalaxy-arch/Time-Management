@@ -96,6 +96,7 @@ const taskList = document.getElementById("task-list");
 const addTaskButton = document.getElementById("add-task-button");
 const taskTotal = document.getElementById("task-total");
 const taskCompleted = document.getElementById("task-completed");
+const emptyTaskMessage = document.getElementById("empty-task-message");
 
 function updateTaskSummary() {
     const checkboxes = taskList.querySelectorAll("input[type='checkbox']");
@@ -114,6 +115,12 @@ function updateTaskSummary() {
 
     taskTotal.textContent = checkboxes.length;
     taskCompleted.textContent = completedCount + " completed";
+
+    if (checkboxes.length === 0) {
+        emptyTaskMessage.style.display = "block";
+    } else {
+        emptyTaskMessage.style.display = "none";
+    }
 }
 
 function listenToCheckbox(checkbox) {
@@ -122,10 +129,28 @@ function listenToCheckbox(checkbox) {
     });
 }
 
+function listenToDeleteButton(deleteButton) {
+    deleteButton.addEventListener("click", function () {
+        const taskRow = deleteButton.closest(".task-row");
+        const taskLabel = taskRow.querySelector("label");
+        const shouldDelete = confirm("Delete " + taskLabel.textContent + "?");
+
+        if (shouldDelete) {
+            taskRow.remove();
+            updateTaskSummary();
+        }
+    });
+}
+
 const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
+const firstDeleteButtons = taskList.querySelectorAll(".delete-task-button");
 
 firstCheckboxes.forEach(function (checkbox) {
     listenToCheckbox(checkbox);
+});
+
+firstDeleteButtons.forEach(function (deleteButton) {
+    listenToDeleteButton(deleteButton);
 });
 
 addTaskButton.addEventListener("click", function () {
@@ -166,13 +191,16 @@ addTaskButton.addEventListener("click", function () {
         <div class="task-details">
             <span class="priority ${taskPriority}">${priorityText}</span>
             <span class="task-time">${taskTime.trim()}</span>
+            <button class="delete-task-button" type="button">Delete</button>
         </div>
     `;
 
     taskList.appendChild(newTask);
 
     const newCheckbox = newTask.querySelector("input[type='checkbox']");
+    const newDeleteButton = newTask.querySelector(".delete-task-button");
     listenToCheckbox(newCheckbox);
+    listenToDeleteButton(newDeleteButton);
     updateTaskSummary();
 });
 

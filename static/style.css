@@ -325,7 +325,7 @@ body {
 .task-details {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
     margin-top: 14px;
     margin-left: 32px;
 }
@@ -357,8 +357,30 @@ body {
 }
 
 .task-time {
+    margin-left: auto;
     color: #59647d;
     font-size: 14px;
+}
+
+.delete-task-button {
+    padding: 5px 8px;
+    border: 1px solid #f2c5cf;
+    border-radius: 4px;
+    background-color: white;
+    color: #e14b6e;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.delete-task-button:hover {
+    background-color: #fff0f4;
+}
+
+.empty-task-message {
+    display: none;
+    margin: 40px 0;
+    color: #7b8294;
+    text-align: center;
 }
 
 .add-task-button {
