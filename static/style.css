@@ -86,6 +86,13 @@ body {
     background-color: #5b55f7;
 }
 
+.main-content,
+.tasks-panel,
+.schedule-panel,
+.timer-panel {
+    scroll-margin-top: 25px;
+}
+
 .sidebar-message {
     margin-top: 240px;
     padding: 24px 12px;

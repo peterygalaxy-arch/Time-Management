@@ -205,3 +205,57 @@ addTaskButton.addEventListener("click", function () {
 });
 
 updateTaskSummary();
+
+const menuLinks = document.querySelectorAll(".menu-link");
+const dashboardLink = document.getElementById("dashboard-link");
+const tasksLink = document.getElementById("tasks-link");
+const calendarMenuLink = document.getElementById("calendar-menu-link");
+const focusLink = document.getElementById("focus-link");
+const settingsLink = document.getElementById("settings-link");
+const dashboard = document.getElementById("dashboard");
+const tasksPanel = document.getElementById("tasks-panel");
+const schedulePanel = document.getElementById("schedule-panel");
+const timerPanel = document.getElementById("timer-panel");
+
+function selectMenuLink(selectedLink) {
+    menuLinks.forEach(function (menuLink) {
+        menuLink.classList.remove("active");
+    });
+
+    selectedLink.classList.add("active");
+}
+
+dashboardLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    selectMenuLink(dashboardLink);
+    dashboard.scrollIntoView();
+});
+
+tasksLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    selectMenuLink(tasksLink);
+    tasksPanel.scrollIntoView();
+});
+
+calendarMenuLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    selectMenuLink(calendarMenuLink);
+    schedulePanel.scrollIntoView();
+});
+
+focusLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    selectMenuLink(focusLink);
+    timerPanel.scrollIntoView();
+});
+
+settingsLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    selectMenuLink(settingsLink);
+    timerPanel.scrollIntoView();
+
+    if (!timerOptions.classList.contains("open")) {
+        focusMinutesInput.value = focusMinutes;
+        timerOptions.classList.add("open");
+    }
+});

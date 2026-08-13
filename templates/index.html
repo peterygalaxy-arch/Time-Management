@@ -15,27 +15,27 @@
             </div>
 
             <div class="menu">
-                <a class="menu-link active" href="#">
+                <a class="menu-link active" id="dashboard-link" href="#dashboard">
                     <span class="menu-icon">&#8962;</span>
                     <span>Dashboard</span>
                 </a>
 
-                <a class="menu-link" href="#">
+                <a class="menu-link" id="tasks-link" href="#tasks-panel">
                     <span class="menu-icon">&#9745;</span>
                     <span>Tasks</span>
                 </a>
 
-                <a class="menu-link" href="#">
+                <a class="menu-link" id="calendar-menu-link" href="#schedule-panel">
                     <span class="menu-icon">&#128197;</span>
                     <span>Calendar</span>
                 </a>
 
-                <a class="menu-link" href="#">
+                <a class="menu-link" id="focus-link" href="#timer-panel">
                     <span class="menu-icon">&#128336;</span>
                     <span>Focus Timer</span>
                 </a>
 
-                <a class="menu-link" href="#">
+                <a class="menu-link" id="settings-link" href="#timer-options">
                     <span class="menu-icon">&#9881;</span>
                     <span>Settings</span>
                 </a>
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="main-content">
+        <div class="main-content" id="dashboard">
             <div class="top-header">
                 <div class="welcome">
                     <h2>Good morning, Alex! <span class="wave">&#128075;</span></h2>
@@ -108,7 +108,7 @@
             </div>
 
             <div class="dashboard-section">
-                <div class="tasks-panel">
+                <div class="tasks-panel" id="tasks-panel">
                     <div class="panel-heading">
                         <h3>Today's Tasks</h3>
                         <a href="#">View all</a>
@@ -186,7 +186,7 @@
                     <button class="add-task-button" id="add-task-button" type="button">+ Add Task</button>
                 </div>
 
-                <div class="schedule-panel">
+                <div class="schedule-panel" id="schedule-panel">
                     <h3>Today's Schedule</h3>
 
                     <div class="schedule-list">
@@ -272,7 +272,7 @@
                     <a class="calendar-link" href="#">View Calendar</a>
                 </div>
 
-                <div class="timer-panel">
+                <div class="timer-panel" id="timer-panel">
                     <div class="timer-heading">
                         <h3>Focus Timer</h3>
                         <button class="timer-settings" id="timer-settings" type="button" title="Timer settings">&#9881;</button>
