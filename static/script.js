@@ -129,6 +129,45 @@ function listenToCheckbox(checkbox) {
     });
 }
 
+function listenToEditButton(editButton) {
+    editButton.addEventListener("click", function () {
+        const taskRow = editButton.closest(".task-row");
+        const taskLabel = taskRow.querySelector("label");
+        const taskTime = taskRow.querySelector(".task-time");
+        const taskPriority = taskRow.querySelector(".priority");
+        const newName = prompt("Edit task name:", taskLabel.textContent);
+
+        if (newName === null || newName.trim() === "") {
+            return;
+        }
+
+        let newTime = prompt("Edit task time:", taskTime.textContent);
+
+        if (newTime === null || newTime.trim() === "") {
+            newTime = "No time";
+        }
+
+        let newPriority = prompt("Edit High, Medium, or Low:", taskPriority.textContent);
+
+        if (newPriority === null) {
+            return;
+        }
+
+        newPriority = newPriority.trim().toLowerCase();
+
+        if (newPriority !== "high" && newPriority !== "medium" && newPriority !== "low") {
+            alert("Please enter High, Medium, or Low.");
+            return;
+        }
+
+        taskLabel.textContent = newName.trim();
+        taskTime.textContent = newTime.trim();
+        taskPriority.classList.remove("high", "medium", "low");
+        taskPriority.classList.add(newPriority);
+        taskPriority.textContent = newPriority.charAt(0).toUpperCase() + newPriority.slice(1);
+    });
+}
+
 function listenToDeleteButton(deleteButton) {
     deleteButton.addEventListener("click", function () {
         const taskRow = deleteButton.closest(".task-row");
@@ -143,10 +182,15 @@ function listenToDeleteButton(deleteButton) {
 }
 
 const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
+const firstEditButtons = taskList.querySelectorAll(".edit-task-button");
 const firstDeleteButtons = taskList.querySelectorAll(".delete-task-button");
 
 firstCheckboxes.forEach(function (checkbox) {
     listenToCheckbox(checkbox);
+});
+
+firstEditButtons.forEach(function (editButton) {
+    listenToEditButton(editButton);
 });
 
 firstDeleteButtons.forEach(function (deleteButton) {
@@ -191,6 +235,7 @@ addTaskButton.addEventListener("click", function () {
         <div class="task-details">
             <span class="priority ${taskPriority}">${priorityText}</span>
             <span class="task-time">${taskTime.trim()}</span>
+            <button class="edit-task-button" type="button">Edit</button>
             <button class="delete-task-button" type="button">Delete</button>
         </div>
     `;
@@ -198,8 +243,10 @@ addTaskButton.addEventListener("click", function () {
     taskList.appendChild(newTask);
 
     const newCheckbox = newTask.querySelector("input[type='checkbox']");
+    const newEditButton = newTask.querySelector(".edit-task-button");
     const newDeleteButton = newTask.querySelector(".delete-task-button");
     listenToCheckbox(newCheckbox);
+    listenToEditButton(newEditButton);
     listenToDeleteButton(newDeleteButton);
     updateTaskSummary();
 });

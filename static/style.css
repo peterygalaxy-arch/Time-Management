@@ -369,14 +369,27 @@ body {
     font-size: 14px;
 }
 
+.edit-task-button,
 .delete-task-button {
     padding: 5px 8px;
-    border: 1px solid #f2c5cf;
     border-radius: 4px;
     background-color: white;
-    color: #e14b6e;
     font-size: 12px;
     cursor: pointer;
+}
+
+.edit-task-button {
+    border: 1px solid #cdd1f5;
+    color: #5b55f7;
+}
+
+.delete-task-button {
+    border: 1px solid #f2c5cf;
+    color: #e14b6e;
+}
+
+.edit-task-button:hover {
+    background-color: #f2f1ff;
 }
 
 .delete-task-button:hover {
