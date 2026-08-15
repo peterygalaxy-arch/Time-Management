@@ -306,3 +306,72 @@ settingsLink.addEventListener("click", function (event) {
         timerOptions.classList.add("open");
     }
 });
+
+const scheduleList = document.getElementById("schedule-list");
+const addScheduleButton = document.getElementById("add-schedule-button");
+
+addScheduleButton.addEventListener("click", function () {
+    const scheduleName = prompt("Enter a schedule name:");
+
+    if (scheduleName === null || scheduleName.trim() === "") {
+        return;
+    }
+
+    const startTime = prompt("Enter a start time:", "7:00 PM");
+
+    if (startTime === null || startTime.trim() === "") {
+        return;
+    }
+
+    const endTime = prompt("Enter an end time:", "8:00 PM");
+
+    if (endTime === null || endTime.trim() === "") {
+        return;
+    }
+
+    let scheduleColour = prompt(
+        "Enter Purple, Green, Orange, Pink, or Blue:",
+        "Purple"
+    );
+
+    if (scheduleColour === null) {
+        scheduleColour = "Purple";
+    }
+
+    scheduleColour = scheduleColour.trim().toLowerCase();
+
+    if (
+        scheduleColour !== "purple" &&
+        scheduleColour !== "green" &&
+        scheduleColour !== "orange" &&
+        scheduleColour !== "pink" &&
+        scheduleColour !== "blue"
+    ) {
+        scheduleColour = "purple";
+    }
+
+    let lineColourClass = "";
+    let dotColourClass = "";
+    let nameColourClass = "";
+
+    if (scheduleColour !== "purple") {
+        lineColourClass = scheduleColour + "-line";
+        dotColourClass = scheduleColour + "-dot";
+        nameColourClass = scheduleColour + "-name";
+    }
+
+    const newSchedule = document.createElement("div");
+    newSchedule.className = "schedule-row";
+    newSchedule.innerHTML = `
+        <p class="schedule-time">${startTime.trim()}</p>
+        <div class="schedule-line ${lineColourClass}">
+            <span class="schedule-dot ${dotColourClass}"></span>
+        </div>
+        <div class="schedule-card ${scheduleColour}-schedule">
+            <p class="schedule-name ${nameColourClass}">${scheduleName.trim()}</p>
+            <p class="schedule-hours">${startTime.trim()} - ${endTime.trim()}</p>
+        </div>
+    `;
+
+    scheduleList.appendChild(newSchedule);
+});
