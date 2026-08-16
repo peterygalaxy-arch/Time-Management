@@ -483,9 +483,34 @@ body {
 }
 
 .schedule-hours {
+    display: inline-block;
     margin-top: 8px !important;
     color: #59647d;
     font-size: 13px;
+}
+
+.delete-schedule-button {
+    float: right;
+    margin-top: 4px;
+    padding: 3px 6px;
+    border: 1px solid #efc1c1;
+    border-radius: 4px;
+    background-color: white;
+    color: #bd4949;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.delete-schedule-button:hover {
+    background-color: #fff1f1;
+}
+
+.empty-schedule-message {
+    display: none;
+    margin-top: 30px;
+    color: #59647d;
+    font-size: 14px;
+    text-align: center;
 }
 
 .green-line {

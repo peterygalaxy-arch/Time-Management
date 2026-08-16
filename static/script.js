@@ -309,6 +309,40 @@ settingsLink.addEventListener("click", function (event) {
 
 const scheduleList = document.getElementById("schedule-list");
 const addScheduleButton = document.getElementById("add-schedule-button");
+const emptyScheduleMessage = document.getElementById("empty-schedule-message");
+
+function updateScheduleMessage() {
+    const scheduleRows = scheduleList.querySelectorAll(".schedule-row");
+
+    if (scheduleRows.length === 0) {
+        emptyScheduleMessage.style.display = "block";
+    } else {
+        emptyScheduleMessage.style.display = "none";
+    }
+}
+
+function listenToScheduleDeleteButton(deleteButton) {
+    deleteButton.addEventListener("click", function () {
+        const scheduleRow = deleteButton.closest(".schedule-row");
+        const scheduleName = scheduleRow.querySelector(".schedule-name");
+        const shouldDelete = confirm("Delete " + scheduleName.textContent + "?");
+
+        if (shouldDelete) {
+            scheduleRow.remove();
+            updateScheduleMessage();
+        }
+    });
+}
+
+const firstScheduleDeleteButtons = scheduleList.querySelectorAll(
+    ".delete-schedule-button"
+);
+
+firstScheduleDeleteButtons.forEach(function (deleteButton) {
+    listenToScheduleDeleteButton(deleteButton);
+});
+
+updateScheduleMessage();
 
 addScheduleButton.addEventListener("click", function () {
     const scheduleName = prompt("Enter a schedule name:");
@@ -370,8 +404,13 @@ addScheduleButton.addEventListener("click", function () {
         <div class="schedule-card ${scheduleColour}-schedule">
             <p class="schedule-name ${nameColourClass}">${scheduleName.trim()}</p>
             <p class="schedule-hours">${startTime.trim()} - ${endTime.trim()}</p>
+            <button class="delete-schedule-button" type="button">Delete</button>
         </div>
     `;
 
     scheduleList.appendChild(newSchedule);
+
+    const newDeleteButton = newSchedule.querySelector(".delete-schedule-button");
+    listenToScheduleDeleteButton(newDeleteButton);
+    updateScheduleMessage();
 });
