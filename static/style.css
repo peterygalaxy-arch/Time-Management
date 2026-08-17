@@ -489,16 +489,30 @@ body {
     font-size: 13px;
 }
 
+.edit-schedule-button,
 .delete-schedule-button {
     float: right;
     margin-top: 4px;
     padding: 3px 6px;
-    border: 1px solid #efc1c1;
     border-radius: 4px;
     background-color: white;
-    color: #bd4949;
     font-size: 11px;
     cursor: pointer;
+}
+
+.edit-schedule-button {
+    margin-left: 4px;
+    border: 1px solid #c9c5ff;
+    color: #5b55f7;
+}
+
+.delete-schedule-button {
+    border: 1px solid #efc1c1;
+    color: #bd4949;
+}
+
+.edit-schedule-button:hover {
+    background-color: #f3f1ff;
 }
 
 .delete-schedule-button:hover {

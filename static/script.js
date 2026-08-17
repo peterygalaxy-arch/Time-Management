@@ -321,6 +321,43 @@ function updateScheduleMessage() {
     }
 }
 
+function listenToScheduleEditButton(editButton) {
+    editButton.addEventListener("click", function () {
+        const scheduleRow = editButton.closest(".schedule-row");
+        const scheduleName = scheduleRow.querySelector(".schedule-name");
+        const scheduleTime = scheduleRow.querySelector(".schedule-time");
+        const scheduleHours = scheduleRow.querySelector(".schedule-hours");
+        const oldHours = scheduleHours.textContent.split(" - ");
+        const newName = prompt("Edit schedule name:", scheduleName.textContent);
+
+        if (newName === null || newName.trim() === "") {
+            return;
+        }
+
+        const newStartTime = prompt("Edit start time:", scheduleTime.textContent);
+
+        if (newStartTime === null || newStartTime.trim() === "") {
+            return;
+        }
+
+        let oldEndTime = "8:00 PM";
+
+        if (oldHours.length > 1) {
+            oldEndTime = oldHours[1];
+        }
+
+        const newEndTime = prompt("Edit end time:", oldEndTime);
+
+        if (newEndTime === null || newEndTime.trim() === "") {
+            return;
+        }
+
+        scheduleName.textContent = newName.trim();
+        scheduleTime.textContent = newStartTime.trim();
+        scheduleHours.textContent = newStartTime.trim() + " - " + newEndTime.trim();
+    });
+}
+
 function listenToScheduleDeleteButton(deleteButton) {
     deleteButton.addEventListener("click", function () {
         const scheduleRow = deleteButton.closest(".schedule-row");
@@ -337,6 +374,13 @@ function listenToScheduleDeleteButton(deleteButton) {
 const firstScheduleDeleteButtons = scheduleList.querySelectorAll(
     ".delete-schedule-button"
 );
+const firstScheduleEditButtons = scheduleList.querySelectorAll(
+    ".edit-schedule-button"
+);
+
+firstScheduleEditButtons.forEach(function (editButton) {
+    listenToScheduleEditButton(editButton);
+});
 
 firstScheduleDeleteButtons.forEach(function (deleteButton) {
     listenToScheduleDeleteButton(deleteButton);
@@ -404,13 +448,16 @@ addScheduleButton.addEventListener("click", function () {
         <div class="schedule-card ${scheduleColour}-schedule">
             <p class="schedule-name ${nameColourClass}">${scheduleName.trim()}</p>
             <p class="schedule-hours">${startTime.trim()} - ${endTime.trim()}</p>
+            <button class="edit-schedule-button" type="button">Edit</button>
             <button class="delete-schedule-button" type="button">Delete</button>
         </div>
     `;
 
     scheduleList.appendChild(newSchedule);
 
+    const newEditButton = newSchedule.querySelector(".edit-schedule-button");
     const newDeleteButton = newSchedule.querySelector(".delete-schedule-button");
+    listenToScheduleEditButton(newEditButton);
     listenToScheduleDeleteButton(newDeleteButton);
     updateScheduleMessage();
 });
