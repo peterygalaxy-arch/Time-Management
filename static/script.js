@@ -3,6 +3,55 @@ let timeLeft = focusMinutes * 60;
 let timerRunning = false;
 let timerInterval;
 
+const greetingText = document.getElementById("greeting-text");
+const profileNameText = document.getElementById("profile-name");
+const currentDateText = document.getElementById("current-date");
+const profileAvatar = document.getElementById("profile-avatar");
+let profileName = profileNameText.textContent;
+
+function showGreeting() {
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+        greetingText.textContent = "Good morning";
+    } else if (currentHour < 18) {
+        greetingText.textContent = "Good afternoon";
+    } else {
+        greetingText.textContent = "Good evening";
+    }
+}
+
+function showCurrentDate() {
+    const today = new Date();
+    const dateOptions = {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    };
+
+    currentDateText.textContent = today.toLocaleDateString("en-NZ", dateOptions);
+}
+
+function showProfileName() {
+    profileNameText.textContent = profileName;
+    profileAvatar.textContent = profileName.charAt(0).toUpperCase();
+}
+
+profileAvatar.addEventListener("click", function () {
+    const newName = prompt("Enter your name:", profileName);
+
+    if (newName === null || newName.trim() === "") {
+        return;
+    }
+
+    profileName = newName.trim();
+    showProfileName();
+});
+
+showGreeting();
+showCurrentDate();
+showProfileName();
+
 const timerNumber = document.getElementById("timer-number");
 const timerMessage = document.getElementById("timer-message");
 const startButton = document.getElementById("start-button");
