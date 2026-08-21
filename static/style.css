@@ -267,10 +267,31 @@ body {
 }
 
 .goal-progress {
-    width: 75%;
+    width: 25%;
     height: 10px;
     border-radius: 5px;
     background-color: #ffad1f;
+}
+
+.goal-note {
+    margin-top: 10px !important;
+    color: #a96c12;
+    font-size: 12px;
+}
+
+.set-goal-button {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border: 1px solid #efcf97;
+    border-radius: 4px;
+    background-color: white;
+    color: #a96c12;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.set-goal-button:hover {
+    background-color: #fff2d8;
 }
 
 .streak-icon {

@@ -146,6 +146,28 @@ const addTaskButton = document.getElementById("add-task-button");
 const taskTotal = document.getElementById("task-total");
 const taskCompleted = document.getElementById("task-completed");
 const emptyTaskMessage = document.getElementById("empty-task-message");
+const dailyGoalNumber = document.getElementById("daily-goal-number");
+const dailyGoalProgress = document.getElementById("daily-goal-progress");
+const dailyGoalText = document.getElementById("daily-goal-text");
+const setGoalButton = document.getElementById("set-goal-button");
+let dailyGoal = 4;
+
+function updateDailyGoal(completedCount) {
+    let goalPercentage = Math.round(completedCount / dailyGoal * 100);
+
+    if (goalPercentage > 100) {
+        goalPercentage = 100;
+    }
+
+    dailyGoalNumber.textContent = goalPercentage + "%";
+    dailyGoalProgress.style.width = goalPercentage + "%";
+
+    if (completedCount >= dailyGoal) {
+        dailyGoalText.textContent = "Goal complete!";
+    } else {
+        dailyGoalText.textContent = completedCount + " of " + dailyGoal + " tasks";
+    }
+}
 
 function updateTaskSummary() {
     const checkboxes = taskList.querySelectorAll("input[type='checkbox']");
@@ -164,6 +186,7 @@ function updateTaskSummary() {
 
     taskTotal.textContent = checkboxes.length;
     taskCompleted.textContent = completedCount + " completed";
+    updateDailyGoal(completedCount);
 
     if (checkboxes.length === 0) {
         emptyTaskMessage.style.display = "block";
@@ -171,6 +194,24 @@ function updateTaskSummary() {
         emptyTaskMessage.style.display = "none";
     }
 }
+
+setGoalButton.addEventListener("click", function () {
+    const newGoalText = prompt("How many tasks is your goal?", dailyGoal);
+
+    if (newGoalText === null) {
+        return;
+    }
+
+    const newGoal = Number(newGoalText);
+
+    if (newGoal < 1 || newGoal > 20 || Number.isInteger(newGoal) === false) {
+        alert("Please enter a whole number from 1 to 20.");
+        return;
+    }
+
+    dailyGoal = newGoal;
+    updateTaskSummary();
+});
 
 function listenToCheckbox(checkbox) {
     checkbox.addEventListener("change", function () {
