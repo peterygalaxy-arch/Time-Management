@@ -252,6 +252,22 @@ body {
 
 .focus-note {
     color: #25994e;
+    font-size: 12px;
+}
+
+.clear-focus-button {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border: 1px solid #bfe2ca;
+    border-radius: 4px;
+    background-color: white;
+    color: #258647;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.clear-focus-button:hover {
+    background-color: #e8f7ed;
 }
 
 .goal-icon {
