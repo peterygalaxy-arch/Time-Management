@@ -197,7 +197,58 @@ const dailyGoalNumber = document.getElementById("daily-goal-number");
 const dailyGoalProgress = document.getElementById("daily-goal-progress");
 const dailyGoalText = document.getElementById("daily-goal-text");
 const setGoalButton = document.getElementById("set-goal-button");
+const viewTasksLink = document.getElementById("view-tasks-link");
+const taskFilters = document.getElementById("task-filters");
+const allTasksButton = document.getElementById("all-tasks-button");
+const todoTasksButton = document.getElementById("todo-tasks-button");
+const completedTasksButton = document.getElementById("completed-tasks-button");
+const filterTaskMessage = document.getElementById("filter-task-message");
 let dailyGoal = 4;
+let taskFilter = "all";
+
+function filterTasks() {
+    const taskRows = taskList.querySelectorAll(".task-row");
+    const filterButtons = taskFilters.querySelectorAll(".task-filter-button");
+    let visibleTaskCount = 0;
+
+    taskRows.forEach(function (taskRow) {
+        const checkbox = taskRow.querySelector("input[type='checkbox']");
+        let showTask = true;
+
+        if (taskFilter === "todo" && checkbox.checked) {
+            showTask = false;
+        }
+
+        if (taskFilter === "completed" && checkbox.checked === false) {
+            showTask = false;
+        }
+
+        if (showTask) {
+            taskRow.style.display = "block";
+            visibleTaskCount = visibleTaskCount + 1;
+        } else {
+            taskRow.style.display = "none";
+        }
+    });
+
+    filterButtons.forEach(function (filterButton) {
+        filterButton.classList.remove("active-filter");
+    });
+
+    if (taskFilter === "todo") {
+        todoTasksButton.classList.add("active-filter");
+    } else if (taskFilter === "completed") {
+        completedTasksButton.classList.add("active-filter");
+    } else {
+        allTasksButton.classList.add("active-filter");
+    }
+
+    if (taskRows.length > 0 && visibleTaskCount === 0) {
+        filterTaskMessage.style.display = "block";
+    } else {
+        filterTaskMessage.style.display = "none";
+    }
+}
 
 function updateDailyGoal(completedCount) {
     let goalPercentage = Math.round(completedCount / dailyGoal * 100);
@@ -240,7 +291,38 @@ function updateTaskSummary() {
     } else {
         emptyTaskMessage.style.display = "none";
     }
+
+    filterTasks();
 }
+
+viewTasksLink.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    if (taskFilters.classList.contains("open")) {
+        taskFilters.classList.remove("open");
+        viewTasksLink.textContent = "View all";
+        taskFilter = "all";
+        filterTasks();
+    } else {
+        taskFilters.classList.add("open");
+        viewTasksLink.textContent = "Hide filters";
+    }
+});
+
+allTasksButton.addEventListener("click", function () {
+    taskFilter = "all";
+    filterTasks();
+});
+
+todoTasksButton.addEventListener("click", function () {
+    taskFilter = "todo";
+    filterTasks();
+});
+
+completedTasksButton.addEventListener("click", function () {
+    taskFilter = "completed";
+    filterTasks();
+});
 
 setGoalButton.addEventListener("click", function () {
     const newGoalText = prompt("How many tasks is your goal?", dailyGoal);

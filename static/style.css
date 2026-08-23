@@ -350,6 +350,32 @@ body {
     text-decoration: none;
 }
 
+.task-filters {
+    display: none;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.task-filters.open {
+    display: flex;
+}
+
+.task-filter-button {
+    padding: 5px 9px;
+    border: 1px solid #d9d7f7;
+    border-radius: 4px;
+    background-color: white;
+    color: #59647d;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.task-filter-button.active-filter {
+    border-color: #625bf6;
+    background-color: #f2f1ff;
+    color: #514be4;
+}
+
 .task-list {
     margin-top: 28px;
 }
@@ -442,6 +468,13 @@ body {
 }
 
 .empty-task-message {
+    display: none;
+    margin: 40px 0;
+    color: #7b8294;
+    text-align: center;
+}
+
+.filter-task-message {
     display: none;
     margin: 40px 0;
     color: #7b8294;
