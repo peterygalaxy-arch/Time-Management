@@ -203,16 +203,20 @@ const allTasksButton = document.getElementById("all-tasks-button");
 const todoTasksButton = document.getElementById("todo-tasks-button");
 const completedTasksButton = document.getElementById("completed-tasks-button");
 const filterTaskMessage = document.getElementById("filter-task-message");
+const taskSearchInput = document.getElementById("task-search-input");
+const clearSearchButton = document.getElementById("clear-search-button");
 let dailyGoal = 4;
 let taskFilter = "all";
 
 function filterTasks() {
     const taskRows = taskList.querySelectorAll(".task-row");
     const filterButtons = taskFilters.querySelectorAll(".task-filter-button");
+    const searchText = taskSearchInput.value.trim().toLowerCase();
     let visibleTaskCount = 0;
 
     taskRows.forEach(function (taskRow) {
         const checkbox = taskRow.querySelector("input[type='checkbox']");
+        const taskName = taskRow.querySelector("label").textContent.toLowerCase();
         let showTask = true;
 
         if (taskFilter === "todo" && checkbox.checked) {
@@ -220,6 +224,10 @@ function filterTasks() {
         }
 
         if (taskFilter === "completed" && checkbox.checked === false) {
+            showTask = false;
+        }
+
+        if (searchText !== "" && taskName.includes(searchText) === false) {
             showTask = false;
         }
 
@@ -302,6 +310,7 @@ viewTasksLink.addEventListener("click", function (event) {
         taskFilters.classList.remove("open");
         viewTasksLink.textContent = "View all";
         taskFilter = "all";
+        taskSearchInput.value = "";
         filterTasks();
     } else {
         taskFilters.classList.add("open");
@@ -322,6 +331,16 @@ todoTasksButton.addEventListener("click", function () {
 completedTasksButton.addEventListener("click", function () {
     taskFilter = "completed";
     filterTasks();
+});
+
+taskSearchInput.addEventListener("input", function () {
+    filterTasks();
+});
+
+clearSearchButton.addEventListener("click", function () {
+    taskSearchInput.value = "";
+    filterTasks();
+    taskSearchInput.focus();
 });
 
 setGoalButton.addEventListener("click", function () {
@@ -384,6 +403,7 @@ function listenToEditButton(editButton) {
         taskPriority.classList.remove("high", "medium", "low");
         taskPriority.classList.add(newPriority);
         taskPriority.textContent = newPriority.charAt(0).toUpperCase() + newPriority.slice(1);
+        filterTasks();
     });
 }
 

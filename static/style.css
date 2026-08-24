@@ -352,12 +352,42 @@ body {
 
 .task-filters {
     display: none;
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 18px;
 }
 
 .task-filters.open {
     display: flex;
+}
+
+.task-search-row {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+}
+
+#task-search-input {
+    flex: 1;
+    padding: 7px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    color: #26324b;
+    font-size: 12px;
+}
+
+#clear-search-button {
+    padding: 7px 10px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    background-color: white;
+    color: #59647d;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#clear-search-button:hover {
+    background-color: #f5f5fa;
 }
 
 .task-filter-button {
