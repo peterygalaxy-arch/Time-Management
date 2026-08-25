@@ -303,6 +303,73 @@ function updateTaskSummary() {
     filterTasks();
 }
 
+function saveTasks() {
+    const taskRows = taskList.querySelectorAll(".task-row");
+    const savedTasks = [];
+
+    taskRows.forEach(function (taskRow) {
+        const checkbox = taskRow.querySelector("input[type='checkbox']");
+        const taskName = taskRow.querySelector("label").textContent;
+        const taskTime = taskRow.querySelector(".task-time").textContent;
+        const priority = taskRow.querySelector(".priority");
+        let priorityName = "low";
+
+        if (priority.classList.contains("high")) {
+            priorityName = "high";
+        } else if (priority.classList.contains("medium")) {
+            priorityName = "medium";
+        }
+
+        savedTasks.push({
+            name: taskName,
+            time: taskTime,
+            priority: priorityName,
+            completed: checkbox.checked
+        });
+    });
+
+    localStorage.setItem("timeTrackTasks", JSON.stringify(savedTasks));
+}
+
+function loadSavedTasks() {
+    const savedTaskText = localStorage.getItem("timeTrackTasks");
+
+    if (savedTaskText === null) {
+        return;
+    }
+
+    const savedTasks = JSON.parse(savedTaskText);
+    taskList.innerHTML = "";
+
+    savedTasks.forEach(function (savedTask, taskNumber) {
+        const savedTaskRow = document.createElement("div");
+        const priorityText = savedTask.priority.charAt(0).toUpperCase() + savedTask.priority.slice(1);
+        let checkedText = "";
+
+        if (savedTask.completed) {
+            checkedText = "checked";
+            savedTaskRow.className = "task-row completed-task";
+        } else {
+            savedTaskRow.className = "task-row";
+        }
+
+        savedTaskRow.innerHTML = `
+            <div class="task-name">
+                <input type="checkbox" id="saved-task-${taskNumber}" ${checkedText}>
+                <label for="saved-task-${taskNumber}">${savedTask.name}</label>
+            </div>
+            <div class="task-details">
+                <span class="priority ${savedTask.priority}">${priorityText}</span>
+                <span class="task-time">${savedTask.time}</span>
+                <button class="edit-task-button" type="button">Edit</button>
+                <button class="delete-task-button" type="button">Delete</button>
+            </div>
+        `;
+
+        taskList.appendChild(savedTaskRow);
+    });
+}
+
 viewTasksLink.addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -364,6 +431,7 @@ setGoalButton.addEventListener("click", function () {
 function listenToCheckbox(checkbox) {
     checkbox.addEventListener("change", function () {
         updateTaskSummary();
+        saveTasks();
     });
 }
 
@@ -404,6 +472,7 @@ function listenToEditButton(editButton) {
         taskPriority.classList.add(newPriority);
         taskPriority.textContent = newPriority.charAt(0).toUpperCase() + newPriority.slice(1);
         filterTasks();
+        saveTasks();
     });
 }
 
@@ -416,9 +485,12 @@ function listenToDeleteButton(deleteButton) {
         if (shouldDelete) {
             taskRow.remove();
             updateTaskSummary();
+            saveTasks();
         }
     });
 }
+
+loadSavedTasks();
 
 const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
 const firstEditButtons = taskList.querySelectorAll(".edit-task-button");
@@ -488,6 +560,7 @@ addTaskButton.addEventListener("click", function () {
     listenToEditButton(newEditButton);
     listenToDeleteButton(newDeleteButton);
     updateTaskSummary();
+    saveTasks();
 });
 
 updateTaskSummary();
