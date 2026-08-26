@@ -633,6 +633,75 @@ function updateScheduleMessage() {
     }
 }
 
+function saveSchedules() {
+    const scheduleRows = scheduleList.querySelectorAll(".schedule-row");
+    const savedSchedules = [];
+
+    scheduleRows.forEach(function (scheduleRow) {
+        const scheduleCard = scheduleRow.querySelector(".schedule-card");
+        let scheduleColour = "purple";
+
+        if (scheduleCard.classList.contains("green-schedule")) {
+            scheduleColour = "green";
+        } else if (scheduleCard.classList.contains("orange-schedule")) {
+            scheduleColour = "orange";
+        } else if (scheduleCard.classList.contains("pink-schedule")) {
+            scheduleColour = "pink";
+        } else if (scheduleCard.classList.contains("blue-schedule")) {
+            scheduleColour = "blue";
+        }
+
+        savedSchedules.push({
+            name: scheduleRow.querySelector(".schedule-name").textContent,
+            startTime: scheduleRow.querySelector(".schedule-time").textContent,
+            hours: scheduleRow.querySelector(".schedule-hours").textContent,
+            colour: scheduleColour
+        });
+    });
+
+    localStorage.setItem("timeTrackSchedules", JSON.stringify(savedSchedules));
+}
+
+function loadSavedSchedules() {
+    const savedScheduleText = localStorage.getItem("timeTrackSchedules");
+
+    if (savedScheduleText === null) {
+        return;
+    }
+
+    const savedSchedules = JSON.parse(savedScheduleText);
+    scheduleList.innerHTML = "";
+
+    savedSchedules.forEach(function (savedSchedule) {
+        let lineColourClass = "";
+        let dotColourClass = "";
+        let nameColourClass = "";
+
+        if (savedSchedule.colour !== "purple") {
+            lineColourClass = savedSchedule.colour + "-line";
+            dotColourClass = savedSchedule.colour + "-dot";
+            nameColourClass = savedSchedule.colour + "-name";
+        }
+
+        const savedScheduleRow = document.createElement("div");
+        savedScheduleRow.className = "schedule-row";
+        savedScheduleRow.innerHTML = `
+            <p class="schedule-time">${savedSchedule.startTime}</p>
+            <div class="schedule-line ${lineColourClass}">
+                <span class="schedule-dot ${dotColourClass}"></span>
+            </div>
+            <div class="schedule-card ${savedSchedule.colour}-schedule">
+                <p class="schedule-name ${nameColourClass}">${savedSchedule.name}</p>
+                <p class="schedule-hours">${savedSchedule.hours}</p>
+                <button class="edit-schedule-button" type="button">Edit</button>
+                <button class="delete-schedule-button" type="button">Delete</button>
+            </div>
+        `;
+
+        scheduleList.appendChild(savedScheduleRow);
+    });
+}
+
 function listenToScheduleEditButton(editButton) {
     editButton.addEventListener("click", function () {
         const scheduleRow = editButton.closest(".schedule-row");
@@ -667,6 +736,7 @@ function listenToScheduleEditButton(editButton) {
         scheduleName.textContent = newName.trim();
         scheduleTime.textContent = newStartTime.trim();
         scheduleHours.textContent = newStartTime.trim() + " - " + newEndTime.trim();
+        saveSchedules();
     });
 }
 
@@ -679,9 +749,12 @@ function listenToScheduleDeleteButton(deleteButton) {
         if (shouldDelete) {
             scheduleRow.remove();
             updateScheduleMessage();
+            saveSchedules();
         }
     });
 }
+
+loadSavedSchedules();
 
 const firstScheduleDeleteButtons = scheduleList.querySelectorAll(
     ".delete-schedule-button"
@@ -772,4 +845,5 @@ addScheduleButton.addEventListener("click", function () {
     listenToScheduleEditButton(newEditButton);
     listenToScheduleDeleteButton(newDeleteButton);
     updateScheduleMessage();
+    saveSchedules();
 });
