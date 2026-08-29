@@ -406,6 +406,39 @@ body {
     color: #514be4;
 }
 
+.priority-filter-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 4px;
+    gap: 7px;
+}
+
+.priority-filter-row label {
+    color: #59647d;
+    font-size: 12px;
+}
+
+#priority-filter {
+    padding: 6px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    background-color: white;
+    color: #26324b;
+    font-size: 12px;
+}
+
+#priority-filter:focus {
+    border-color: #625bf6;
+    outline: none;
+}
+
+#task-result-count {
+    margin: 0 0 0 auto;
+    color: #7b8294;
+    font-size: 11px;
+}
+
 .task-list {
     margin-top: 28px;
 }

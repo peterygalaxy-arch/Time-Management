@@ -126,6 +126,17 @@
                         <button class="task-filter-button active-filter" id="all-tasks-button" type="button">All</button>
                         <button class="task-filter-button" id="todo-tasks-button" type="button">To do</button>
                         <button class="task-filter-button" id="completed-tasks-button" type="button">Completed</button>
+
+                        <div class="priority-filter-row">
+                            <label for="priority-filter">Priority:</label>
+                            <select id="priority-filter">
+                                <option value="all">All priorities</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <p id="task-result-count">5 tasks shown</p>
+                        </div>
                     </div>
 
                     <div class="task-list" id="task-list">

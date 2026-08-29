@@ -205,6 +205,8 @@ const completedTasksButton = document.getElementById("completed-tasks-button");
 const filterTaskMessage = document.getElementById("filter-task-message");
 const taskSearchInput = document.getElementById("task-search-input");
 const clearSearchButton = document.getElementById("clear-search-button");
+const priorityFilter = document.getElementById("priority-filter");
+const taskResultCount = document.getElementById("task-result-count");
 let dailyGoal = 4;
 let taskFilter = "all";
 
@@ -217,6 +219,7 @@ function filterTasks() {
     taskRows.forEach(function (taskRow) {
         const checkbox = taskRow.querySelector("input[type='checkbox']");
         const taskName = taskRow.querySelector("label").textContent.toLowerCase();
+        const taskPriority = taskRow.querySelector(".priority").textContent.toLowerCase();
         let showTask = true;
 
         if (taskFilter === "todo" && checkbox.checked) {
@@ -228,6 +231,10 @@ function filterTasks() {
         }
 
         if (searchText !== "" && taskName.includes(searchText) === false) {
+            showTask = false;
+        }
+
+        if (priorityFilter.value !== "all" && taskPriority !== priorityFilter.value) {
             showTask = false;
         }
 
@@ -255,6 +262,12 @@ function filterTasks() {
         filterTaskMessage.style.display = "block";
     } else {
         filterTaskMessage.style.display = "none";
+    }
+
+    if (visibleTaskCount === 1) {
+        taskResultCount.textContent = "1 task shown";
+    } else {
+        taskResultCount.textContent = visibleTaskCount + " tasks shown";
     }
 }
 
@@ -378,6 +391,7 @@ viewTasksLink.addEventListener("click", function (event) {
         viewTasksLink.textContent = "View all";
         taskFilter = "all";
         taskSearchInput.value = "";
+        priorityFilter.value = "all";
         filterTasks();
     } else {
         taskFilters.classList.add("open");
@@ -408,6 +422,10 @@ clearSearchButton.addEventListener("click", function () {
     taskSearchInput.value = "";
     filterTasks();
     taskSearchInput.focus();
+});
+
+priorityFilter.addEventListener("change", function () {
+    filterTasks();
 });
 
 setGoalButton.addEventListener("click", function () {
