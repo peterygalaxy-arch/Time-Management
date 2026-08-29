@@ -68,6 +68,30 @@ const cancelTimeButton = document.getElementById("cancel-time-button");
 const focusTimeTotal = document.getElementById("focus-time-total");
 const focusTimeSession = document.getElementById("focus-time-session");
 const clearFocusButton = document.getElementById("clear-focus-button");
+const timerPresetButtons = document.querySelectorAll(".timer-preset-button");
+
+function showSelectedPreset() {
+    timerPresetButtons.forEach(function (presetButton) {
+        const presetMinutes = Number(presetButton.dataset.minutes);
+
+        presetButton.classList.remove("selected-preset");
+
+        if (Number(focusMinutesInput.value) === presetMinutes) {
+            presetButton.classList.add("selected-preset");
+        }
+    });
+}
+
+timerPresetButtons.forEach(function (presetButton) {
+    presetButton.addEventListener("click", function () {
+        focusMinutesInput.value = presetButton.dataset.minutes;
+        showSelectedPreset();
+    });
+});
+
+focusMinutesInput.addEventListener("input", function () {
+    showSelectedPreset();
+});
 
 function showFocusSummary() {
     const totalMinutes = Math.floor(focusedSeconds / 60);
@@ -158,6 +182,7 @@ timerSettings.addEventListener("click", function () {
         timerOptions.classList.remove("open");
     } else {
         focusMinutesInput.value = focusMinutes;
+        showSelectedPreset();
         timerOptions.classList.add("open");
     }
 });
@@ -182,6 +207,7 @@ saveTimeButton.addEventListener("click", function () {
 
 cancelTimeButton.addEventListener("click", function () {
     focusMinutesInput.value = focusMinutes;
+    showSelectedPreset();
     timerOptions.classList.remove("open");
 });
 

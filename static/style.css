@@ -814,6 +814,38 @@ body {
     font-size: 15px;
 }
 
+.timer-preset-label {
+    margin: 12px 0 7px 0;
+    color: #59647d;
+    font-size: 12px;
+}
+
+.timer-presets {
+    display: flex;
+    gap: 6px;
+}
+
+.timer-preset-button {
+    flex: 1;
+    padding: 6px 2px;
+    border: 1px solid #d7d9e4;
+    border-radius: 4px;
+    background-color: white;
+    color: #59647d;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.timer-preset-button:hover {
+    background-color: #f2f1ff;
+}
+
+.timer-preset-button.selected-preset {
+    border-color: #625bf6;
+    background-color: #eeedff;
+    color: #514be4;
+}
+
 .timer-option-buttons {
     display: flex;
     gap: 8px;
