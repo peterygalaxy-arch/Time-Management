@@ -93,6 +93,64 @@ focusMinutesInput.addEventListener("input", function () {
     showSelectedPreset();
 });
 
+function saveFocusTimer() {
+    const savedTimer = {
+        focusMinutes: focusMinutes,
+        timeLeft: timeLeft,
+        focusedSeconds: focusedSeconds,
+        sessionFocusedSeconds: sessionFocusedSeconds,
+        savedDate: new Date().toDateString()
+    };
+
+    localStorage.setItem("timeTrackFocusTimer", JSON.stringify(savedTimer));
+}
+
+function loadFocusTimer() {
+    const savedTimerText = localStorage.getItem("timeTrackFocusTimer");
+
+    if (savedTimerText === null) {
+        return;
+    }
+
+    const savedTimer = JSON.parse(savedTimerText);
+
+    if (
+        Number.isInteger(savedTimer.focusMinutes) &&
+        savedTimer.focusMinutes >= 1 &&
+        savedTimer.focusMinutes <= 60
+    ) {
+        focusMinutes = savedTimer.focusMinutes;
+    }
+
+    const fullTimerSeconds = focusMinutes * 60;
+
+    if (
+        Number.isInteger(savedTimer.timeLeft) &&
+        savedTimer.timeLeft >= 0 &&
+        savedTimer.timeLeft <= fullTimerSeconds
+    ) {
+        timeLeft = savedTimer.timeLeft;
+    } else {
+        timeLeft = fullTimerSeconds;
+    }
+
+    if (Number.isInteger(savedTimer.focusedSeconds) && savedTimer.focusedSeconds >= 0) {
+        focusedSeconds = savedTimer.focusedSeconds;
+    }
+
+    const today = new Date().toDateString();
+
+    if (
+        savedTimer.savedDate === today &&
+        Number.isInteger(savedTimer.sessionFocusedSeconds) &&
+        savedTimer.sessionFocusedSeconds >= 0
+    ) {
+        sessionFocusedSeconds = savedTimer.sessionFocusedSeconds;
+    } else {
+        sessionFocusedSeconds = 0;
+    }
+}
+
 function showFocusSummary() {
     const totalMinutes = Math.floor(focusedSeconds / 60);
     const totalHours = Math.floor(totalMinutes / 60);
@@ -139,6 +197,7 @@ function countDown() {
         sessionFocusedSeconds = sessionFocusedSeconds + 1;
         showTime();
         showFocusSummary();
+        saveFocusTimer();
     } else {
         stopTimer();
         timerMessage.textContent = "Focus session complete!";
@@ -165,6 +224,7 @@ resetButton.addEventListener("click", function () {
     showTime();
     showFocusSummary();
     timerMessage.textContent = "Start focusing!";
+    saveFocusTimer();
 });
 
 clearFocusButton.addEventListener("click", function () {
@@ -174,6 +234,7 @@ clearFocusButton.addEventListener("click", function () {
         focusedSeconds = 0;
         sessionFocusedSeconds = 0;
         showFocusSummary();
+        saveFocusTimer();
     }
 });
 
@@ -203,6 +264,7 @@ saveTimeButton.addEventListener("click", function () {
     showFocusSummary();
     timerMessage.textContent = "Timer set to " + focusMinutes + " minutes";
     timerOptions.classList.remove("open");
+    saveFocusTimer();
 });
 
 cancelTimeButton.addEventListener("click", function () {
@@ -211,6 +273,7 @@ cancelTimeButton.addEventListener("click", function () {
     timerOptions.classList.remove("open");
 });
 
+loadFocusTimer();
 showTime();
 showFocusSummary();
 
