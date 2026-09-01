@@ -296,8 +296,96 @@ const taskSearchInput = document.getElementById("task-search-input");
 const clearSearchButton = document.getElementById("clear-search-button");
 const priorityFilter = document.getElementById("priority-filter");
 const taskResultCount = document.getElementById("task-result-count");
+const streakNumber = document.getElementById("streak-number");
+const streakNote = document.getElementById("streak-note");
 let dailyGoal = 4;
 let taskFilter = "all";
+let streakCount = 0;
+let lastStreakDate = "";
+
+function showStreak() {
+    if (streakCount === 1) {
+        streakNumber.textContent = "1 day";
+    } else {
+        streakNumber.textContent = streakCount + " days";
+    }
+
+    if (streakCount === 0) {
+        streakNote.textContent = "Complete today's goal!";
+    } else {
+        streakNote.textContent = "Keep it up!";
+    }
+}
+
+function saveStreak() {
+    const savedStreak = {
+        count: streakCount,
+        lastDate: lastStreakDate
+    };
+
+    localStorage.setItem("timeTrackStreak", JSON.stringify(savedStreak));
+}
+
+function loadStreak() {
+    const savedStreakText = localStorage.getItem("timeTrackStreak");
+
+    if (savedStreakText === null) {
+        showStreak();
+        return;
+    }
+
+    const savedStreak = JSON.parse(savedStreakText);
+
+    if (Number.isInteger(savedStreak.count) && savedStreak.count >= 0) {
+        streakCount = savedStreak.count;
+    }
+
+    if (typeof savedStreak.lastDate === "string") {
+        lastStreakDate = savedStreak.lastDate;
+    }
+
+    if (lastStreakDate !== "") {
+        const today = new Date(new Date().toDateString());
+        const previousGoalDate = new Date(lastStreakDate);
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+        const daysSinceGoal = Math.round((today - previousGoalDate) / millisecondsInDay);
+
+        if (daysSinceGoal > 1 || daysSinceGoal < 0) {
+            streakCount = 0;
+            lastStreakDate = "";
+            saveStreak();
+        }
+    }
+
+    showStreak();
+}
+
+function recordDailyGoal() {
+    const today = new Date(new Date().toDateString());
+    const todayText = today.toDateString();
+
+    if (lastStreakDate === todayText) {
+        return;
+    }
+
+    if (lastStreakDate === "") {
+        streakCount = 1;
+    } else {
+        const previousGoalDate = new Date(lastStreakDate);
+        const millisecondsInDay = 1000 * 60 * 60 * 24;
+        const daysSinceGoal = Math.round((today - previousGoalDate) / millisecondsInDay);
+
+        if (daysSinceGoal === 1) {
+            streakCount = streakCount + 1;
+        } else {
+            streakCount = 1;
+        }
+    }
+
+    lastStreakDate = todayText;
+    saveStreak();
+    showStreak();
+}
 
 function filterTasks() {
     const taskRows = taskList.querySelectorAll(".task-row");
@@ -372,6 +460,7 @@ function updateDailyGoal(completedCount) {
 
     if (completedCount >= dailyGoal) {
         dailyGoalText.textContent = "Goal complete!";
+        recordDailyGoal();
     } else {
         dailyGoalText.textContent = completedCount + " of " + dailyGoal + " tasks";
     }
@@ -670,6 +759,7 @@ addTaskButton.addEventListener("click", function () {
     saveTasks();
 });
 
+loadStreak();
 updateTaskSummary();
 
 const menuLinks = document.querySelectorAll(".menu-link");
