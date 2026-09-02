@@ -295,8 +295,14 @@ body {
     font-size: 12px;
 }
 
-.set-goal-button {
+.goal-buttons {
+    display: flex;
+    gap: 5px;
     margin-top: 8px;
+}
+
+.set-goal-button {
+    flex: 1;
     padding: 4px 8px;
     border: 1px solid #efcf97;
     border-radius: 4px;
@@ -308,6 +314,27 @@ body {
 
 .set-goal-button:hover {
     background-color: #fff2d8;
+}
+
+.reset-goal-button {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    background-color: white;
+    color: #555555;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.reset-goal-button:hover {
+    background-color: #f2f2f2;
+}
+
+.reset-goal-button:disabled {
+    color: #aaaaaa;
+    background-color: #f7f7f7;
+    cursor: default;
 }
 
 .streak-icon {

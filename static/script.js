@@ -286,6 +286,7 @@ const dailyGoalNumber = document.getElementById("daily-goal-number");
 const dailyGoalProgress = document.getElementById("daily-goal-progress");
 const dailyGoalText = document.getElementById("daily-goal-text");
 const setGoalButton = document.getElementById("set-goal-button");
+const resetGoalButton = document.getElementById("reset-goal-button");
 const viewTasksLink = document.getElementById("view-tasks-link");
 const taskFilters = document.getElementById("task-filters");
 const allTasksButton = document.getElementById("all-tasks-button");
@@ -302,6 +303,24 @@ let dailyGoal = 4;
 let taskFilter = "all";
 let streakCount = 0;
 let lastStreakDate = "";
+
+function saveDailyGoal() {
+    localStorage.setItem("timeTrackDailyGoal", dailyGoal);
+}
+
+function loadDailyGoal() {
+    const savedGoalText = localStorage.getItem("timeTrackDailyGoal");
+
+    if (savedGoalText === null) {
+        return;
+    }
+
+    const savedGoal = Number(savedGoalText);
+
+    if (Number.isInteger(savedGoal) && savedGoal >= 1 && savedGoal <= 20) {
+        dailyGoal = savedGoal;
+    }
+}
 
 function showStreak() {
     if (streakCount === 1) {
@@ -457,6 +476,12 @@ function updateDailyGoal(completedCount) {
 
     dailyGoalNumber.textContent = goalPercentage + "%";
     dailyGoalProgress.style.width = goalPercentage + "%";
+
+    if (dailyGoal === 4) {
+        resetGoalButton.disabled = true;
+    } else {
+        resetGoalButton.disabled = false;
+    }
 
     if (completedCount >= dailyGoal) {
         dailyGoalText.textContent = "Goal complete!";
@@ -621,6 +646,19 @@ setGoalButton.addEventListener("click", function () {
     }
 
     dailyGoal = newGoal;
+    saveDailyGoal();
+    updateTaskSummary();
+});
+
+resetGoalButton.addEventListener("click", function () {
+    const shouldReset = confirm("Reset the daily goal to 4 tasks?");
+
+    if (shouldReset === false) {
+        return;
+    }
+
+    dailyGoal = 4;
+    saveDailyGoal();
     updateTaskSummary();
 });
 
@@ -759,6 +797,7 @@ addTaskButton.addEventListener("click", function () {
     saveTasks();
 });
 
+loadDailyGoal();
 loadStreak();
 updateTaskSummary();
 
