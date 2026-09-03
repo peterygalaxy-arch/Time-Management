@@ -571,9 +571,40 @@ body {
     text-align: center;
 }
 
-.add-task-button {
+.clear-completed-button {
     width: 100%;
     margin-top: 24px;
+    padding: 9px;
+    border: 1px solid #d9dce6;
+    border-radius: 5px;
+    background-color: white;
+    color: #59647d;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.clear-completed-button:hover {
+    border-color: #f2c5cf;
+    background-color: #fff0f4;
+    color: #e14b6e;
+}
+
+.clear-completed-button:disabled {
+    border-color: #e5e5e5;
+    background-color: #f7f7f7;
+    color: #aaaaaa;
+    cursor: default;
+}
+
+.clear-completed-button:disabled:hover {
+    border-color: #e5e5e5;
+    background-color: #f7f7f7;
+    color: #aaaaaa;
+}
+
+.add-task-button {
+    width: 100%;
+    margin-top: 8px;
     padding: 14px;
     border: none;
     border-radius: 7px;

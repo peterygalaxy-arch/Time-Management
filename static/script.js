@@ -279,6 +279,7 @@ showFocusSummary();
 
 const taskList = document.getElementById("task-list");
 const addTaskButton = document.getElementById("add-task-button");
+const clearCompletedButton = document.getElementById("clear-completed-button");
 const taskTotal = document.getElementById("task-total");
 const taskCompleted = document.getElementById("task-completed");
 const emptyTaskMessage = document.getElementById("empty-task-message");
@@ -510,6 +511,17 @@ function updateTaskSummary() {
     taskCompleted.textContent = completedCount + " completed";
     updateDailyGoal(completedCount);
 
+    if (completedCount === 0) {
+        clearCompletedButton.textContent = "Clear completed";
+        clearCompletedButton.disabled = true;
+    } else if (completedCount === 1) {
+        clearCompletedButton.textContent = "Clear 1 completed task";
+        clearCompletedButton.disabled = false;
+    } else {
+        clearCompletedButton.textContent = "Clear " + completedCount + " completed tasks";
+        clearCompletedButton.disabled = false;
+    }
+
     if (checkboxes.length === 0) {
         emptyTaskMessage.style.display = "block";
     } else {
@@ -660,6 +672,36 @@ resetGoalButton.addEventListener("click", function () {
     dailyGoal = 4;
     saveDailyGoal();
     updateTaskSummary();
+});
+
+clearCompletedButton.addEventListener("click", function () {
+    const taskRows = taskList.querySelectorAll(".task-row");
+    let completedCount = 0;
+
+    taskRows.forEach(function (taskRow) {
+        const checkbox = taskRow.querySelector("input[type='checkbox']");
+
+        if (checkbox.checked) {
+            completedCount = completedCount + 1;
+        }
+    });
+
+    const shouldClear = confirm("Remove " + completedCount + " completed task(s)?");
+
+    if (shouldClear === false) {
+        return;
+    }
+
+    taskRows.forEach(function (taskRow) {
+        const checkbox = taskRow.querySelector("input[type='checkbox']");
+
+        if (checkbox.checked) {
+            taskRow.remove();
+        }
+    });
+
+    updateTaskSummary();
+    saveTasks();
 });
 
 function listenToCheckbox(checkbox) {
