@@ -466,6 +466,34 @@ body {
     font-size: 11px;
 }
 
+.task-sort-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 4px;
+    gap: 7px;
+}
+
+.task-sort-row label {
+    color: #59647d;
+    font-size: 12px;
+}
+
+#task-sort {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    background-color: white;
+    color: #26324b;
+    font-size: 12px;
+}
+
+#task-sort:focus {
+    border-color: #625bf6;
+    outline: none;
+}
+
 .task-list {
     margin-top: 28px;
 }

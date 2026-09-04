@@ -297,6 +297,7 @@ const filterTaskMessage = document.getElementById("filter-task-message");
 const taskSearchInput = document.getElementById("task-search-input");
 const clearSearchButton = document.getElementById("clear-search-button");
 const priorityFilter = document.getElementById("priority-filter");
+const taskSort = document.getElementById("task-sort");
 const taskResultCount = document.getElementById("task-result-count");
 const streakNumber = document.getElementById("streak-number");
 const streakNote = document.getElementById("streak-note");
@@ -468,6 +469,41 @@ function filterTasks() {
     }
 }
 
+function sortTasks() {
+    const taskRows = Array.from(taskList.querySelectorAll(".task-row"));
+    const priorityNumbers = {
+        high: 1,
+        medium: 2,
+        low: 3
+    };
+
+    taskRows.sort(function (firstTask, secondTask) {
+        if (taskSort.value === "name") {
+            const firstName = firstTask.querySelector("label").textContent.toLowerCase();
+            const secondName = secondTask.querySelector("label").textContent.toLowerCase();
+            return firstName.localeCompare(secondName);
+        }
+
+        if (taskSort.value === "priority") {
+            const firstPriority = firstTask.querySelector(".priority").textContent.toLowerCase();
+            const secondPriority = secondTask.querySelector(".priority").textContent.toLowerCase();
+            const priorityDifference = priorityNumbers[firstPriority] - priorityNumbers[secondPriority];
+
+            if (priorityDifference !== 0) {
+                return priorityDifference;
+            }
+        }
+
+        return Number(firstTask.dataset.taskOrder) - Number(secondTask.dataset.taskOrder);
+    });
+
+    taskRows.forEach(function (taskRow) {
+        taskList.appendChild(taskRow);
+    });
+
+    filterTasks();
+}
+
 function updateDailyGoal(completedCount) {
     let goalPercentage = Math.round(completedCount / dailyGoal * 100);
 
@@ -607,7 +643,8 @@ viewTasksLink.addEventListener("click", function (event) {
         taskFilter = "all";
         taskSearchInput.value = "";
         priorityFilter.value = "all";
-        filterTasks();
+        taskSort.value = "original";
+        sortTasks();
     } else {
         taskFilters.classList.add("open");
         viewTasksLink.textContent = "Hide filters";
@@ -641,6 +678,10 @@ clearSearchButton.addEventListener("click", function () {
 
 priorityFilter.addEventListener("change", function () {
     filterTasks();
+});
+
+taskSort.addEventListener("change", function () {
+    sortTasks();
 });
 
 setGoalButton.addEventListener("click", function () {
@@ -747,7 +788,7 @@ function listenToEditButton(editButton) {
         taskPriority.classList.remove("high", "medium", "low");
         taskPriority.classList.add(newPriority);
         taskPriority.textContent = newPriority.charAt(0).toUpperCase() + newPriority.slice(1);
-        filterTasks();
+        sortTasks();
         saveTasks();
     });
 }
@@ -771,6 +812,13 @@ loadSavedTasks();
 const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
 const firstEditButtons = taskList.querySelectorAll(".edit-task-button");
 const firstDeleteButtons = taskList.querySelectorAll(".delete-task-button");
+let nextTaskOrder = firstCheckboxes.length;
+
+const firstTaskRows = taskList.querySelectorAll(".task-row");
+
+firstTaskRows.forEach(function (taskRow, taskNumber) {
+    taskRow.dataset.taskOrder = taskNumber;
+});
 
 firstCheckboxes.forEach(function (checkbox) {
     listenToCheckbox(checkbox);
@@ -814,6 +862,8 @@ addTaskButton.addEventListener("click", function () {
     const priorityText = taskPriority.charAt(0).toUpperCase() + taskPriority.slice(1);
 
     newTask.className = "task-row";
+    newTask.dataset.taskOrder = nextTaskOrder;
+    nextTaskOrder = nextTaskOrder + 1;
     newTask.innerHTML = `
         <div class="task-name">
             <input type="checkbox" id="task-${newTaskNumber}">
@@ -836,6 +886,7 @@ addTaskButton.addEventListener("click", function () {
     listenToEditButton(newEditButton);
     listenToDeleteButton(newDeleteButton);
     updateTaskSummary();
+    sortTasks();
     saveTasks();
 });
 
