@@ -142,6 +142,7 @@ body {
     align-items: center;
     gap: 14px;
     color: #59647d;
+    position: relative;
 }
 
 .date-icon {
@@ -177,6 +178,76 @@ body {
 
 .avatar:hover {
     background-color: #4740df;
+}
+
+.profile-box {
+    display: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 220px;
+    padding: 14px;
+    border: 1px solid #dfe2eb;
+    border-radius: 6px;
+    background-color: white;
+    z-index: 2;
+}
+
+.profile-box.open {
+    display: block;
+}
+
+.profile-box label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+.profile-box input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cfd3df;
+    border-radius: 4px;
+    color: #26324b;
+    font-size: 14px;
+}
+
+.profile-box input:focus {
+    border-color: #625bf6;
+    outline: none;
+}
+
+.profile-error {
+    min-height: 14px;
+    margin: 5px 0;
+    color: #e14b6e;
+    font-size: 11px;
+}
+
+.profile-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.profile-buttons button {
+    flex: 1;
+    padding: 6px 3px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    background-color: white;
+    color: #59647d;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.profile-buttons .save-profile-button {
+    border-color: #625bf6;
+    color: #514be4;
+}
+
+.profile-buttons .reset-profile-button {
+    border-color: #f2c5cf;
+    color: #e14b6e;
 }
 
 .summary-section {

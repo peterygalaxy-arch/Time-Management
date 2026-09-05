@@ -58,7 +58,19 @@
                 <div class="profile">
                     <span class="date-icon">&#128197;</span>
                     <span class="date" id="current-date">May 15, 2024</span>
-                    <button class="avatar" id="profile-avatar" type="button" title="Change name">A</button>
+                    <button class="avatar" id="profile-avatar" type="button" title="Edit profile">A</button>
+
+                    <div class="profile-box" id="profile-box">
+                        <label for="profile-name-input">Your name</label>
+                        <input id="profile-name-input" type="text" maxlength="20">
+                        <p class="profile-error" id="profile-error"></p>
+
+                        <div class="profile-buttons">
+                            <button class="save-profile-button" id="save-profile-button" type="button">Save</button>
+                            <button id="cancel-profile-button" type="button">Cancel</button>
+                            <button class="reset-profile-button" id="reset-profile-button" type="button">Reset</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

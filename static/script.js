@@ -9,6 +9,12 @@ const greetingText = document.getElementById("greeting-text");
 const profileNameText = document.getElementById("profile-name");
 const currentDateText = document.getElementById("current-date");
 const profileAvatar = document.getElementById("profile-avatar");
+const profileBox = document.getElementById("profile-box");
+const profileNameInput = document.getElementById("profile-name-input");
+const profileError = document.getElementById("profile-error");
+const saveProfileButton = document.getElementById("save-profile-button");
+const cancelProfileButton = document.getElementById("cancel-profile-button");
+const resetProfileButton = document.getElementById("reset-profile-button");
 let profileName = profileNameText.textContent;
 
 function showGreeting() {
@@ -39,19 +45,76 @@ function showProfileName() {
     profileAvatar.textContent = profileName.charAt(0).toUpperCase();
 }
 
-profileAvatar.addEventListener("click", function () {
-    const newName = prompt("Enter your name:", profileName);
+function loadProfileName() {
+    const savedName = localStorage.getItem("timeTrackProfileName");
 
-    if (newName === null || newName.trim() === "") {
+    if (savedName !== null && savedName.trim() !== "") {
+        profileName = savedName;
+    }
+}
+
+function closeProfileBox() {
+    profileBox.classList.remove("open");
+    profileError.textContent = "";
+}
+
+profileAvatar.addEventListener("click", function () {
+    if (profileBox.classList.contains("open")) {
+        closeProfileBox();
         return;
     }
 
-    profileName = newName.trim();
+    profileNameInput.value = profileName;
+    profileError.textContent = "";
+    profileBox.classList.add("open");
+    profileNameInput.focus();
+});
+
+saveProfileButton.addEventListener("click", function () {
+    const newName = profileNameInput.value.trim();
+
+    if (newName === "") {
+        profileError.textContent = "Please enter a name.";
+        return;
+    }
+
+    profileName = newName;
+    localStorage.setItem("timeTrackProfileName", profileName);
     showProfileName();
+    closeProfileBox();
+});
+
+cancelProfileButton.addEventListener("click", function () {
+    profileNameInput.value = profileName;
+    closeProfileBox();
+});
+
+resetProfileButton.addEventListener("click", function () {
+    const shouldReset = confirm("Change the profile name back to Alex?");
+
+    if (shouldReset === false) {
+        return;
+    }
+
+    profileName = "Alex";
+    localStorage.removeItem("timeTrackProfileName");
+    showProfileName();
+    closeProfileBox();
+});
+
+profileNameInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        saveProfileButton.click();
+    }
+
+    if (event.key === "Escape") {
+        cancelProfileButton.click();
+    }
 });
 
 showGreeting();
 showCurrentDate();
+loadProfileName();
 showProfileName();
 
 const timerNumber = document.getElementById("timer-number");
