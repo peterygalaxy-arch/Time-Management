@@ -364,10 +364,47 @@ const taskSort = document.getElementById("task-sort");
 const taskResultCount = document.getElementById("task-result-count");
 const streakNumber = document.getElementById("streak-number");
 const streakNote = document.getElementById("streak-note");
+const settingsPanel = document.getElementById("settings-panel");
+const showCompletedSetting = document.getElementById("show-completed-setting");
+const confirmDeleteSetting = document.getElementById("confirm-delete-setting");
+const saveSettingsButton = document.getElementById("save-settings-button");
+const settingsMessage = document.getElementById("settings-message");
 let dailyGoal = 4;
 let taskFilter = "all";
 let streakCount = 0;
 let lastStreakDate = "";
+let showCompletedTasks = true;
+let confirmBeforeDelete = true;
+
+function loadWebsiteSettings() {
+    const savedSettingsText = localStorage.getItem("timeTrackWebsiteSettings");
+
+    if (savedSettingsText === null) {
+        return;
+    }
+
+    const savedSettings = JSON.parse(savedSettingsText);
+
+    if (typeof savedSettings.showCompletedTasks === "boolean") {
+        showCompletedTasks = savedSettings.showCompletedTasks;
+    }
+
+    if (typeof savedSettings.confirmBeforeDelete === "boolean") {
+        confirmBeforeDelete = savedSettings.confirmBeforeDelete;
+    }
+
+    showCompletedSetting.checked = showCompletedTasks;
+    confirmDeleteSetting.checked = confirmBeforeDelete;
+}
+
+function saveWebsiteSettings() {
+    const websiteSettings = {
+        showCompletedTasks: showCompletedTasks,
+        confirmBeforeDelete: confirmBeforeDelete
+    };
+
+    localStorage.setItem("timeTrackWebsiteSettings", JSON.stringify(websiteSettings));
+}
 
 function saveDailyGoal() {
     localStorage.setItem("timeTrackDailyGoal", dailyGoal);
@@ -496,6 +533,10 @@ function filterTasks() {
         }
 
         if (priorityFilter.value !== "all" && taskPriority !== priorityFilter.value) {
+            showTask = false;
+        }
+
+        if (showCompletedTasks === false && checkbox.checked) {
             showTask = false;
         }
 
@@ -808,6 +849,18 @@ clearCompletedButton.addEventListener("click", function () {
     saveTasks();
 });
 
+saveSettingsButton.addEventListener("click", function () {
+    showCompletedTasks = showCompletedSetting.checked;
+    confirmBeforeDelete = confirmDeleteSetting.checked;
+    saveWebsiteSettings();
+    filterTasks();
+    settingsMessage.textContent = "Settings saved.";
+
+    setTimeout(function () {
+        settingsMessage.textContent = "";
+    }, 2000);
+});
+
 function listenToCheckbox(checkbox) {
     checkbox.addEventListener("change", function () {
         updateTaskSummary();
@@ -860,7 +913,11 @@ function listenToDeleteButton(deleteButton) {
     deleteButton.addEventListener("click", function () {
         const taskRow = deleteButton.closest(".task-row");
         const taskLabel = taskRow.querySelector("label");
-        const shouldDelete = confirm("Delete " + taskLabel.textContent + "?");
+        let shouldDelete = true;
+
+        if (confirmBeforeDelete) {
+            shouldDelete = confirm("Delete " + taskLabel.textContent + "?");
+        }
 
         if (shouldDelete) {
             taskRow.remove();
@@ -870,6 +927,7 @@ function listenToDeleteButton(deleteButton) {
     });
 }
 
+loadWebsiteSettings();
 loadSavedTasks();
 
 const firstCheckboxes = taskList.querySelectorAll("input[type='checkbox']");
@@ -992,6 +1050,7 @@ calendarMenuLink.addEventListener("click", function (event) {
     event.preventDefault();
     selectMenuLink(calendarMenuLink);
     schedulePanel.scrollIntoView();
+    openCalendarView();
 });
 
 focusLink.addEventListener("click", function (event) {
@@ -1003,17 +1062,80 @@ focusLink.addEventListener("click", function (event) {
 settingsLink.addEventListener("click", function (event) {
     event.preventDefault();
     selectMenuLink(settingsLink);
-    timerPanel.scrollIntoView();
-
-    if (!timerOptions.classList.contains("open")) {
-        focusMinutesInput.value = focusMinutes;
-        timerOptions.classList.add("open");
-    }
+    settingsPanel.scrollIntoView();
 });
 
 const scheduleList = document.getElementById("schedule-list");
 const addScheduleButton = document.getElementById("add-schedule-button");
 const emptyScheduleMessage = document.getElementById("empty-schedule-message");
+const calendarLink = document.getElementById("calendar-link");
+const calendarDate = document.getElementById("calendar-date");
+const calendarCount = document.getElementById("calendar-count");
+const calendarItems = document.getElementById("calendar-items");
+
+function updateCalendarView() {
+    const scheduleRows = scheduleList.querySelectorAll(".schedule-row");
+    const today = new Date();
+    const dateOptions = {
+        weekday: "long",
+        month: "long",
+        day: "numeric"
+    };
+
+    calendarDate.textContent = today.toLocaleDateString("en-NZ", dateOptions);
+    calendarItems.innerHTML = "";
+
+    if (scheduleRows.length === 1) {
+        calendarCount.textContent = "1 plan today";
+    } else {
+        calendarCount.textContent = scheduleRows.length + " plans today";
+    }
+
+    if (scheduleRows.length === 0) {
+        const emptyCalendar = document.createElement("p");
+        emptyCalendar.className = "calendar-empty";
+        emptyCalendar.textContent = "Nothing is planned for today.";
+        calendarItems.appendChild(emptyCalendar);
+        return;
+    }
+
+    scheduleRows.forEach(function (scheduleRow) {
+        const calendarItem = document.createElement("div");
+        const itemTime = document.createElement("p");
+        const itemName = document.createElement("p");
+
+        calendarItem.className = "calendar-item";
+        itemTime.className = "calendar-item-time";
+        itemName.className = "calendar-item-name";
+        itemTime.textContent = scheduleRow.querySelector(".schedule-hours").textContent;
+        itemName.textContent = scheduleRow.querySelector(".schedule-name").textContent;
+
+        calendarItem.appendChild(itemTime);
+        calendarItem.appendChild(itemName);
+        calendarItems.appendChild(calendarItem);
+    });
+}
+
+function openCalendarView() {
+    updateCalendarView();
+    schedulePanel.classList.add("calendar-mode");
+    calendarLink.textContent = "Back to Schedule";
+}
+
+function closeCalendarView() {
+    schedulePanel.classList.remove("calendar-mode");
+    calendarLink.textContent = "View Calendar";
+}
+
+calendarLink.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    if (schedulePanel.classList.contains("calendar-mode")) {
+        closeCalendarView();
+    } else {
+        openCalendarView();
+    }
+});
 
 function updateScheduleMessage() {
     const scheduleRows = scheduleList.querySelectorAll(".schedule-row");
@@ -1136,7 +1258,11 @@ function listenToScheduleDeleteButton(deleteButton) {
     deleteButton.addEventListener("click", function () {
         const scheduleRow = deleteButton.closest(".schedule-row");
         const scheduleName = scheduleRow.querySelector(".schedule-name");
-        const shouldDelete = confirm("Delete " + scheduleName.textContent + "?");
+        let shouldDelete = true;
+
+        if (confirmBeforeDelete) {
+            shouldDelete = confirm("Delete " + scheduleName.textContent + "?");
+        }
 
         if (shouldDelete) {
             scheduleRow.remove();

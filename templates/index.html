@@ -341,8 +341,14 @@
 
                     <p class="empty-schedule-message" id="empty-schedule-message">No schedules left today.</p>
 
+                    <div class="calendar-view" id="calendar-view">
+                        <p class="calendar-date" id="calendar-date">Today's calendar</p>
+                        <p class="calendar-count" id="calendar-count">0 plans today</p>
+                        <div class="calendar-items" id="calendar-items"></div>
+                    </div>
+
                     <button class="add-schedule-button" id="add-schedule-button" type="button">+ Add Schedule</button>
-                    <a class="calendar-link" href="#">View Calendar</a>
+                    <a class="calendar-link" id="calendar-link" href="#">View Calendar</a>
                 </div>
 
                 <div class="timer-panel" id="timer-panel">
@@ -382,6 +388,30 @@
                         <span class="reset-icon">&#8635;</span> Reset
                     </button>
                 </div>
+            </div>
+
+            <div class="settings-panel" id="settings-panel">
+                <h3>Website Settings</h3>
+                <p class="settings-description">Choose how the task and schedule lists work.</p>
+
+                <label class="setting-row" for="show-completed-setting">
+                    <input id="show-completed-setting" type="checkbox" checked>
+                    <span>
+                        <strong>Show completed tasks</strong>
+                        <small>Keep checked tasks visible in Today's Tasks.</small>
+                    </span>
+                </label>
+
+                <label class="setting-row" for="confirm-delete-setting">
+                    <input id="confirm-delete-setting" type="checkbox" checked>
+                    <span>
+                        <strong>Confirm before deleting</strong>
+                        <small>Ask before a task or schedule is removed.</small>
+                    </span>
+                </label>
+
+                <button class="save-settings-button" id="save-settings-button" type="button">Save Settings</button>
+                <p class="settings-message" id="settings-message"></p>
             </div>
         </div>
     </div>
