@@ -238,6 +238,30 @@
                     <p class="empty-task-message" id="empty-task-message">No tasks left today.</p>
                     <p class="filter-task-message" id="filter-task-message">No tasks match this filter.</p>
 
+                    <div class="task-form" id="task-form">
+                        <label for="new-task-name">Task name</label>
+                        <input id="new-task-name" type="text" maxlength="50">
+                        <div class="task-form-row">
+                            <div>
+                                <label for="new-task-time">Time</label>
+                                <input id="new-task-time" type="time">
+                            </div>
+                            <div>
+                                <label for="new-task-priority">Priority</label>
+                                <select id="new-task-priority">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="task-form-error" id="task-form-error"></p>
+                        <div class="task-form-buttons">
+                            <button id="save-task-button" type="button">Add task</button>
+                            <button id="cancel-task-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+
                     <button class="clear-completed-button" id="clear-completed-button" type="button">
                         Clear completed
                     </button>
@@ -341,6 +365,34 @@
 
                     <p class="empty-schedule-message" id="empty-schedule-message">No schedules left today.</p>
 
+                    <div class="schedule-form" id="schedule-form">
+                        <label for="new-schedule-name">Schedule name</label>
+                        <input id="new-schedule-name" type="text" maxlength="50">
+                        <div class="schedule-form-row">
+                            <div>
+                                <label for="new-schedule-start">Start time</label>
+                                <input id="new-schedule-start" type="time">
+                            </div>
+                            <div>
+                                <label for="new-schedule-end">End time</label>
+                                <input id="new-schedule-end" type="time">
+                            </div>
+                        </div>
+                        <label for="new-schedule-colour">Colour</label>
+                        <select id="new-schedule-colour">
+                            <option value="purple">Purple</option>
+                            <option value="green">Green</option>
+                            <option value="orange">Orange</option>
+                            <option value="pink">Pink</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                        <p class="schedule-form-error" id="schedule-form-error"></p>
+                        <div class="schedule-form-buttons">
+                            <button id="save-schedule-button" type="button">Add schedule</button>
+                            <button id="cancel-schedule-button" type="button">Cancel</button>
+                        </div>
+                    </div>
+
                     <div class="calendar-view" id="calendar-view">
                         <p class="calendar-date" id="calendar-date">Today's calendar</p>
                         <p class="calendar-count" id="calendar-count">0 plans today</p>
@@ -411,6 +463,7 @@
                 </label>
 
                 <button class="save-settings-button" id="save-settings-button" type="button">Save Settings</button>
+                <button class="save-settings-button" id="reset-website-button" type="button">Reset Website Data</button>
                 <p class="settings-message" id="settings-message"></p>
             </div>
         </div>

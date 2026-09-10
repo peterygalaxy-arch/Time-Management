@@ -1,3 +1,16 @@
+const savedJsonKeys = ["timeTrackFocusTimer", "timeTrackWebsiteSettings", "timeTrackStreak", "timeTrackTasks", "timeTrackSchedules"];
+savedJsonKeys.forEach(function (savedKey) {
+    try {
+        const savedValue = JSON.parse(localStorage.getItem(savedKey));
+        const needsArray = savedKey === "timeTrackTasks" || savedKey === "timeTrackSchedules";
+        if (savedValue !== null && (typeof savedValue !== "object" || (needsArray && Array.isArray(savedValue) === false))) {
+            localStorage.removeItem(savedKey);
+        }
+    } catch (error) {
+        localStorage.removeItem(savedKey);
+    }
+});
+
 let focusMinutes = 25;
 let timeLeft = focusMinutes * 60;
 let timerRunning = false;
@@ -188,6 +201,7 @@ function loadFocusTimer() {
     const fullTimerSeconds = focusMinutes * 60;
 
     if (
+        Number.isInteger(savedTimer.focusMinutes) &&
         Number.isInteger(savedTimer.timeLeft) &&
         savedTimer.timeLeft >= 0 &&
         savedTimer.timeLeft <= fullTimerSeconds
@@ -314,8 +328,8 @@ timerSettings.addEventListener("click", function () {
 saveTimeButton.addEventListener("click", function () {
     const newMinutes = Number(focusMinutesInput.value);
 
-    if (newMinutes < 1 || newMinutes > 60) {
-        alert("Please enter a number from 1 to 60.");
+    if (newMinutes < 1 || newMinutes > 60 || Number.isInteger(newMinutes) === false) {
+        timerMessage.textContent = "Use whole minutes, 1-60.";
         return;
     }
 
@@ -368,13 +382,22 @@ const settingsPanel = document.getElementById("settings-panel");
 const showCompletedSetting = document.getElementById("show-completed-setting");
 const confirmDeleteSetting = document.getElementById("confirm-delete-setting");
 const saveSettingsButton = document.getElementById("save-settings-button");
+const resetWebsiteButton = document.getElementById("reset-website-button");
 const settingsMessage = document.getElementById("settings-message");
+const taskForm = document.getElementById("task-form");
+const newTaskNameInput = document.getElementById("new-task-name");
+const newTaskTimeInput = document.getElementById("new-task-time");
+const newTaskPriorityInput = document.getElementById("new-task-priority");
+const taskFormError = document.getElementById("task-form-error");
+const saveTaskButton = document.getElementById("save-task-button");
+const cancelTaskButton = document.getElementById("cancel-task-button");
 let dailyGoal = 4;
 let taskFilter = "all";
 let streakCount = 0;
 let lastStreakDate = "";
 let showCompletedTasks = true;
 let confirmBeforeDelete = true;
+let editingTaskRow = null;
 
 function loadWebsiteSettings() {
     const savedSettingsText = localStorage.getItem("timeTrackWebsiteSettings");
@@ -711,11 +734,15 @@ function loadSavedTasks() {
 
     savedTasks.forEach(function (savedTask, taskNumber) {
         const savedTaskRow = document.createElement("div");
-        const priorityText = savedTask.priority.charAt(0).toUpperCase() + savedTask.priority.slice(1);
-        let checkedText = "";
+        let savedPriority = savedTask.priority;
+
+        if (savedPriority !== "high" && savedPriority !== "medium" && savedPriority !== "low") {
+            savedPriority = "low";
+        }
+
+        const priorityText = savedPriority.charAt(0).toUpperCase() + savedPriority.slice(1);
 
         if (savedTask.completed) {
-            checkedText = "checked";
             savedTaskRow.className = "task-row completed-task";
         } else {
             savedTaskRow.className = "task-row";
@@ -723,16 +750,22 @@ function loadSavedTasks() {
 
         savedTaskRow.innerHTML = `
             <div class="task-name">
-                <input type="checkbox" id="saved-task-${taskNumber}" ${checkedText}>
-                <label for="saved-task-${taskNumber}">${savedTask.name}</label>
+                <input type="checkbox" id="saved-task-${taskNumber}">
+                <label for="saved-task-${taskNumber}"></label>
             </div>
             <div class="task-details">
-                <span class="priority ${savedTask.priority}">${priorityText}</span>
-                <span class="task-time">${savedTask.time}</span>
+                <span class="priority"></span>
+                <span class="task-time"></span>
                 <button class="edit-task-button" type="button">Edit</button>
                 <button class="delete-task-button" type="button">Delete</button>
             </div>
         `;
+
+        savedTaskRow.querySelector("input[type='checkbox']").checked = savedTask.completed === true;
+        savedTaskRow.querySelector("label").textContent = savedTask.name;
+        savedTaskRow.querySelector(".priority").classList.add(savedPriority);
+        savedTaskRow.querySelector(".priority").textContent = priorityText;
+        savedTaskRow.querySelector(".task-time").textContent = savedTask.time;
 
         taskList.appendChild(savedTaskRow);
     });
@@ -861,6 +894,15 @@ saveSettingsButton.addEventListener("click", function () {
     }, 2000);
 });
 
+resetWebsiteButton.addEventListener("click", function () {
+    const shouldReset = confirm("Reset all website data?");
+
+    if (shouldReset) {
+        localStorage.clear();
+        window.location.reload();
+    }
+});
+
 function listenToCheckbox(checkbox) {
     checkbox.addEventListener("change", function () {
         updateTaskSummary();
@@ -870,42 +912,16 @@ function listenToCheckbox(checkbox) {
 
 function listenToEditButton(editButton) {
     editButton.addEventListener("click", function () {
-        const taskRow = editButton.closest(".task-row");
-        const taskLabel = taskRow.querySelector("label");
-        const taskTime = taskRow.querySelector(".task-time");
-        const taskPriority = taskRow.querySelector(".priority");
-        const newName = prompt("Edit task name:", taskLabel.textContent);
-
-        if (newName === null || newName.trim() === "") {
-            return;
-        }
-
-        let newTime = prompt("Edit task time:", taskTime.textContent);
-
-        if (newTime === null || newTime.trim() === "") {
-            newTime = "No time";
-        }
-
-        let newPriority = prompt("Edit High, Medium, or Low:", taskPriority.textContent);
-
-        if (newPriority === null) {
-            return;
-        }
-
-        newPriority = newPriority.trim().toLowerCase();
-
-        if (newPriority !== "high" && newPriority !== "medium" && newPriority !== "low") {
-            alert("Please enter High, Medium, or Low.");
-            return;
-        }
-
-        taskLabel.textContent = newName.trim();
-        taskTime.textContent = newTime.trim();
-        taskPriority.classList.remove("high", "medium", "low");
-        taskPriority.classList.add(newPriority);
-        taskPriority.textContent = newPriority.charAt(0).toUpperCase() + newPriority.slice(1);
-        sortTasks();
-        saveTasks();
+        editingTaskRow = editButton.closest(".task-row");
+        newTaskNameInput.value = editingTaskRow.querySelector("label").textContent;
+        newTaskTimeInput.value = displayTimeForInput(
+            editingTaskRow.querySelector(".task-time").textContent
+        );
+        newTaskPriorityInput.value = editingTaskRow.querySelector(".priority").textContent.toLowerCase();
+        saveTaskButton.textContent = "Save changes";
+        taskFormError.textContent = "";
+        taskForm.classList.add("open");
+        newTaskNameInput.focus();
     });
 }
 
@@ -953,29 +969,96 @@ firstDeleteButtons.forEach(function (deleteButton) {
     listenToDeleteButton(deleteButton);
 });
 
-addTaskButton.addEventListener("click", function () {
-    const taskName = prompt("Enter a task name:");
+function closeTaskForm() {
+    taskForm.classList.remove("open");
+    newTaskNameInput.value = "";
+    newTaskTimeInput.value = "";
+    newTaskPriorityInput.value = "low";
+    taskFormError.textContent = "";
+    saveTaskButton.textContent = "Add task";
+    editingTaskRow = null;
+}
 
-    if (taskName === null || taskName.trim() === "") {
+function formatTaskTime(timeValue) {
+    const timeParts = timeValue.split(":");
+    let hour = Number(timeParts[0]);
+    const minutes = timeParts[1];
+    let period = "AM";
+
+    if (hour >= 12) {
+        period = "PM";
+    }
+
+    if (hour === 0) {
+        hour = 12;
+    } else if (hour > 12) {
+        hour = hour - 12;
+    }
+
+    return hour + ":" + minutes + " " + period;
+}
+
+function timeTextToMinutes(timeText) {
+    const timeParts = timeText.trim().split(/[: ]/);
+    let hour = Number(timeParts[0]);
+    const minutes = Number(timeParts[1]);
+    const period = timeParts[2];
+
+    if (period === "PM" && hour !== 12) {
+        hour = hour + 12;
+    } else if (period === "AM" && hour === 12) {
+        hour = 0;
+    }
+
+    return hour * 60 + minutes;
+}
+
+function displayTimeForInput(timeText) {
+    const totalMinutes = timeTextToMinutes(timeText);
+    const hour = Math.floor(totalMinutes / 60).toString().padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+    return hour + ":" + minutes;
+}
+
+addTaskButton.addEventListener("click", function () {
+    editingTaskRow = null;
+    saveTaskButton.textContent = "Add task";
+    taskForm.classList.add("open");
+    taskFormError.textContent = "";
+    newTaskNameInput.focus();
+});
+
+cancelTaskButton.addEventListener("click", function () {
+    closeTaskForm();
+});
+
+saveTaskButton.addEventListener("click", function () {
+    const taskName = newTaskNameInput.value.trim();
+    const taskTime = newTaskTimeInput.value;
+    const taskPriority = newTaskPriorityInput.value;
+
+    if (taskName === "" || taskName.length > 50) {
+        taskFormError.textContent = "Enter a task name from 1 to 50 characters.";
+        newTaskNameInput.focus();
         return;
     }
 
-    let taskTime = prompt("Enter a time:", "7:00 PM");
-
-    if (taskTime === null || taskTime.trim() === "") {
-        taskTime = "No time";
+    if (taskTime === "") {
+        taskFormError.textContent = "Please choose a time.";
+        newTaskTimeInput.focus();
+        return;
     }
 
-    let taskPriority = prompt("Enter High, Medium, or Low:", "Low");
-
-    if (taskPriority === null) {
-        taskPriority = "Low";
-    }
-
-    taskPriority = taskPriority.trim().toLowerCase();
-
-    if (taskPriority !== "high" && taskPriority !== "medium" && taskPriority !== "low") {
-        taskPriority = "low";
+    if (editingTaskRow !== null) {
+        const taskPriorityText = taskPriority.charAt(0).toUpperCase() + taskPriority.slice(1);
+        editingTaskRow.querySelector("label").textContent = taskName;
+        editingTaskRow.querySelector(".task-time").textContent = formatTaskTime(taskTime);
+        editingTaskRow.querySelector(".priority").className = "priority " + taskPriority;
+        editingTaskRow.querySelector(".priority").textContent = taskPriorityText;
+        sortTasks();
+        saveTasks();
+        closeTaskForm();
+        return;
     }
 
     const newTaskNumber = taskList.querySelectorAll(".task-row").length + 1;
@@ -988,15 +1071,18 @@ addTaskButton.addEventListener("click", function () {
     newTask.innerHTML = `
         <div class="task-name">
             <input type="checkbox" id="task-${newTaskNumber}">
-            <label for="task-${newTaskNumber}">${taskName.trim()}</label>
+            <label for="task-${newTaskNumber}"></label>
         </div>
         <div class="task-details">
             <span class="priority ${taskPriority}">${priorityText}</span>
-            <span class="task-time">${taskTime.trim()}</span>
+            <span class="task-time"></span>
             <button class="edit-task-button" type="button">Edit</button>
             <button class="delete-task-button" type="button">Delete</button>
         </div>
     `;
+
+    newTask.querySelector("label").textContent = taskName;
+    newTask.querySelector(".task-time").textContent = formatTaskTime(taskTime);
 
     taskList.appendChild(newTask);
 
@@ -1009,6 +1095,7 @@ addTaskButton.addEventListener("click", function () {
     updateTaskSummary();
     sortTasks();
     saveTasks();
+    closeTaskForm();
 });
 
 loadDailyGoal();
@@ -1068,10 +1155,19 @@ settingsLink.addEventListener("click", function (event) {
 const scheduleList = document.getElementById("schedule-list");
 const addScheduleButton = document.getElementById("add-schedule-button");
 const emptyScheduleMessage = document.getElementById("empty-schedule-message");
+const scheduleForm = document.getElementById("schedule-form");
+const newScheduleNameInput = document.getElementById("new-schedule-name");
+const newScheduleStartInput = document.getElementById("new-schedule-start");
+const newScheduleEndInput = document.getElementById("new-schedule-end");
+const newScheduleColourInput = document.getElementById("new-schedule-colour");
+const scheduleFormError = document.getElementById("schedule-form-error");
+const saveScheduleButton = document.getElementById("save-schedule-button");
+const cancelScheduleButton = document.getElementById("cancel-schedule-button");
 const calendarLink = document.getElementById("calendar-link");
 const calendarDate = document.getElementById("calendar-date");
 const calendarCount = document.getElementById("calendar-count");
 const calendarItems = document.getElementById("calendar-items");
+let editingScheduleRow = null;
 
 function updateCalendarView() {
     const scheduleRows = scheduleList.querySelectorAll(".schedule-row");
@@ -1187,30 +1283,45 @@ function loadSavedSchedules() {
     scheduleList.innerHTML = "";
 
     savedSchedules.forEach(function (savedSchedule) {
+        let savedColour = savedSchedule.colour;
         let lineColourClass = "";
         let dotColourClass = "";
         let nameColourClass = "";
 
-        if (savedSchedule.colour !== "purple") {
-            lineColourClass = savedSchedule.colour + "-line";
-            dotColourClass = savedSchedule.colour + "-dot";
-            nameColourClass = savedSchedule.colour + "-name";
+        if (
+            savedColour !== "purple" &&
+            savedColour !== "green" &&
+            savedColour !== "orange" &&
+            savedColour !== "pink" &&
+            savedColour !== "blue"
+        ) {
+            savedColour = "purple";
+        }
+
+        if (savedColour !== "purple") {
+            lineColourClass = savedColour + "-line";
+            dotColourClass = savedColour + "-dot";
+            nameColourClass = savedColour + "-name";
         }
 
         const savedScheduleRow = document.createElement("div");
         savedScheduleRow.className = "schedule-row";
         savedScheduleRow.innerHTML = `
-            <p class="schedule-time">${savedSchedule.startTime}</p>
+            <p class="schedule-time"></p>
             <div class="schedule-line ${lineColourClass}">
                 <span class="schedule-dot ${dotColourClass}"></span>
             </div>
-            <div class="schedule-card ${savedSchedule.colour}-schedule">
-                <p class="schedule-name ${nameColourClass}">${savedSchedule.name}</p>
-                <p class="schedule-hours">${savedSchedule.hours}</p>
+            <div class="schedule-card ${savedColour}-schedule">
+                <p class="schedule-name ${nameColourClass}"></p>
+                <p class="schedule-hours"></p>
                 <button class="edit-schedule-button" type="button">Edit</button>
                 <button class="delete-schedule-button" type="button">Delete</button>
             </div>
         `;
+
+        savedScheduleRow.querySelector(".schedule-time").textContent = savedSchedule.startTime;
+        savedScheduleRow.querySelector(".schedule-name").textContent = savedSchedule.name;
+        savedScheduleRow.querySelector(".schedule-hours").textContent = savedSchedule.hours;
 
         scheduleList.appendChild(savedScheduleRow);
     });
@@ -1218,39 +1329,18 @@ function loadSavedSchedules() {
 
 function listenToScheduleEditButton(editButton) {
     editButton.addEventListener("click", function () {
-        const scheduleRow = editButton.closest(".schedule-row");
-        const scheduleName = scheduleRow.querySelector(".schedule-name");
-        const scheduleTime = scheduleRow.querySelector(".schedule-time");
-        const scheduleHours = scheduleRow.querySelector(".schedule-hours");
-        const oldHours = scheduleHours.textContent.split(" - ");
-        const newName = prompt("Edit schedule name:", scheduleName.textContent);
+        editingScheduleRow = editButton.closest(".schedule-row");
+        const oldHours = editingScheduleRow.querySelector(".schedule-hours").textContent.split(" - ");
+        const scheduleCard = editingScheduleRow.querySelector(".schedule-card");
+        const scheduleColour = scheduleCard.classList[1].replace("-schedule", "");
 
-        if (newName === null || newName.trim() === "") {
-            return;
-        }
-
-        const newStartTime = prompt("Edit start time:", scheduleTime.textContent);
-
-        if (newStartTime === null || newStartTime.trim() === "") {
-            return;
-        }
-
-        let oldEndTime = "8:00 PM";
-
-        if (oldHours.length > 1) {
-            oldEndTime = oldHours[1];
-        }
-
-        const newEndTime = prompt("Edit end time:", oldEndTime);
-
-        if (newEndTime === null || newEndTime.trim() === "") {
-            return;
-        }
-
-        scheduleName.textContent = newName.trim();
-        scheduleTime.textContent = newStartTime.trim();
-        scheduleHours.textContent = newStartTime.trim() + " - " + newEndTime.trim();
-        saveSchedules();
+        newScheduleNameInput.value = editingScheduleRow.querySelector(".schedule-name").textContent;
+        newScheduleStartInput.value = displayTimeForInput(oldHours[0]);
+        newScheduleEndInput.value = displayTimeForInput(oldHours[1]);
+        newScheduleColourInput.value = scheduleColour;
+        saveScheduleButton.textContent = "Save changes";
+        scheduleForm.classList.add("open");
+        newScheduleNameInput.focus();
     });
 }
 
@@ -1292,43 +1382,47 @@ firstScheduleDeleteButtons.forEach(function (deleteButton) {
 updateScheduleMessage();
 
 addScheduleButton.addEventListener("click", function () {
-    const scheduleName = prompt("Enter a schedule name:");
+    scheduleForm.classList.add("open");
+    scheduleFormError.textContent = "";
+    newScheduleNameInput.focus();
+});
 
-    if (scheduleName === null || scheduleName.trim() === "") {
+function closeScheduleForm() {
+    scheduleForm.classList.remove("open");
+    newScheduleNameInput.value = "";
+    newScheduleStartInput.value = "";
+    newScheduleEndInput.value = "";
+    newScheduleColourInput.value = "purple";
+    scheduleFormError.textContent = "";
+    saveScheduleButton.textContent = "Add schedule";
+    editingScheduleRow = null;
+}
+
+cancelScheduleButton.addEventListener("click", function () {
+    closeScheduleForm();
+});
+
+saveScheduleButton.addEventListener("click", function () {
+    const scheduleName = newScheduleNameInput.value.trim();
+    const startTime = newScheduleStartInput.value;
+    const endTime = newScheduleEndInput.value;
+    const scheduleColour = newScheduleColourInput.value;
+
+    if (scheduleName === "" || scheduleName.length > 50) {
+        scheduleFormError.textContent = "Enter a schedule name from 1 to 50 characters.";
+        newScheduleNameInput.focus();
         return;
     }
 
-    const startTime = prompt("Enter a start time:", "7:00 PM");
-
-    if (startTime === null || startTime.trim() === "") {
+    if (startTime === "" || endTime === "") {
+        scheduleFormError.textContent = "Please choose a start and end time.";
         return;
     }
 
-    const endTime = prompt("Enter an end time:", "8:00 PM");
-
-    if (endTime === null || endTime.trim() === "") {
+    if (endTime <= startTime) {
+        scheduleFormError.textContent = "End time must be later than start time.";
+        newScheduleEndInput.focus();
         return;
-    }
-
-    let scheduleColour = prompt(
-        "Enter Purple, Green, Orange, Pink, or Blue:",
-        "Purple"
-    );
-
-    if (scheduleColour === null) {
-        scheduleColour = "Purple";
-    }
-
-    scheduleColour = scheduleColour.trim().toLowerCase();
-
-    if (
-        scheduleColour !== "purple" &&
-        scheduleColour !== "green" &&
-        scheduleColour !== "orange" &&
-        scheduleColour !== "pink" &&
-        scheduleColour !== "blue"
-    ) {
-        scheduleColour = "purple";
     }
 
     let lineColourClass = "";
@@ -1344,19 +1438,29 @@ addScheduleButton.addEventListener("click", function () {
     const newSchedule = document.createElement("div");
     newSchedule.className = "schedule-row";
     newSchedule.innerHTML = `
-        <p class="schedule-time">${startTime.trim()}</p>
+        <p class="schedule-time"></p>
         <div class="schedule-line ${lineColourClass}">
             <span class="schedule-dot ${dotColourClass}"></span>
         </div>
         <div class="schedule-card ${scheduleColour}-schedule">
-            <p class="schedule-name ${nameColourClass}">${scheduleName.trim()}</p>
-            <p class="schedule-hours">${startTime.trim()} - ${endTime.trim()}</p>
+            <p class="schedule-name ${nameColourClass}"></p>
+            <p class="schedule-hours"></p>
             <button class="edit-schedule-button" type="button">Edit</button>
             <button class="delete-schedule-button" type="button">Delete</button>
         </div>
     `;
 
-    scheduleList.appendChild(newSchedule);
+    const shownStartTime = formatTaskTime(startTime);
+    const shownEndTime = formatTaskTime(endTime);
+    newSchedule.querySelector(".schedule-time").textContent = shownStartTime;
+    newSchedule.querySelector(".schedule-name").textContent = scheduleName;
+    newSchedule.querySelector(".schedule-hours").textContent = shownStartTime + " - " + shownEndTime;
+
+    if (editingScheduleRow === null) {
+        scheduleList.appendChild(newSchedule);
+    } else {
+        editingScheduleRow.replaceWith(newSchedule);
+    }
 
     const newEditButton = newSchedule.querySelector(".edit-schedule-button");
     const newDeleteButton = newSchedule.querySelector(".delete-schedule-button");
@@ -1364,4 +1468,5 @@ addScheduleButton.addEventListener("click", function () {
     listenToScheduleDeleteButton(newDeleteButton);
     updateScheduleMessage();
     saveSchedules();
+    closeScheduleForm();
 });

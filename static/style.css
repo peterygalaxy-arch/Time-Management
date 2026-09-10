@@ -701,6 +701,80 @@ body {
     color: #aaaaaa;
 }
 
+.task-form,
+.schedule-form {
+    display: none;
+    margin-top: 22px;
+    padding: 14px;
+    border: 1px solid #d9dce6;
+    border-radius: 5px;
+    background-color: #f8f8fc;
+}
+.task-form.open,
+.schedule-form.open {
+    display: block;
+}
+.task-form label,
+.schedule-form label {
+    display: block;
+    margin: 8px 0 5px 0;
+    color: #59647d;
+    font-size: 12px;
+}
+.task-form input,
+.task-form select,
+.schedule-form input,
+.schedule-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #d9dce6;
+    border-radius: 4px;
+    background-color: white;
+    color: #26324b;
+}
+.task-form-row,
+.schedule-form-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+.task-form-row div,
+.schedule-form-row div {
+    width: 50%;
+}
+.task-form-error,
+.schedule-form-error {
+    min-height: 16px;
+    margin: 8px 0 0 0;
+    color: #d93268;
+    font-size: 12px;
+}
+.task-form-buttons,
+.schedule-form-buttons {
+    display: flex;
+    gap: 8px;
+}
+.task-form-buttons button,
+.schedule-form-buttons button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+#save-task-button,
+#save-schedule-button {
+    border: 1px solid #625bf6;
+    background-color: #625bf6;
+    color: white;
+}
+#cancel-task-button,
+#cancel-schedule-button {
+    border: 1px solid #d9dce6;
+    color: #59647d;
+}
+
 .add-task-button {
     width: 100%;
     margin-top: 8px;
@@ -921,6 +995,7 @@ body {
 
 .schedule-panel.calendar-mode .schedule-list,
 .schedule-panel.calendar-mode .empty-schedule-message,
+.schedule-panel.calendar-mode .schedule-form,
 .schedule-panel.calendar-mode .add-schedule-button {
     display: none !important;
 }
